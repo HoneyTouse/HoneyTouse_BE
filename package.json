@@ -7,7 +7,8 @@
     "start": "nodemon --watch 'bin/*' --watch 'src/*' bin/index.js ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint bin src",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "pm2:production": "pm2 start bin/index.js"
   },
   "keywords": [],
   "author": "",
