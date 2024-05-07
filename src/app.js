@@ -25,7 +25,7 @@ async function create() {
   // Health check API
   expressApp.get('/health', (req, res) => {
     res.json({
-      status: 'OK',
+      status: 'OK !!!',
     });
   });
 
