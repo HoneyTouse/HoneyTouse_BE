@@ -6,18 +6,23 @@ const {
   authController,
 } = require('../controller');
 const { checkProductCategoryFrom } = require('../middleware');
-const { adminMiddleware, orderMiddleware } = require('../middleware');
+const { orderMiddleware } = require('../middleware');
+const checkAuthentication = require('../middleware/loginMiddleware');
 const adminRouter = express.Router();
 
 // GET /api/v1/admin/orders
 // 전체 주문 조회
-adminRouter.get('/orders', adminMiddleware, orderController.getAllOrders);
+adminRouter.get(
+  '/orders',
+  checkAuthentication(true),
+  orderController.getAllOrders,
+);
 
 // GET /api/v1/admin/orders/status?status=
 // 관리자 주문상태별 조회
 adminRouter.get(
   '/orders/status',
-  adminMiddleware,
+  checkAuthentication(true),
   orderController.getOrdersByStatus,
 );
 
@@ -25,7 +30,7 @@ adminRouter.get(
 // 관리자 주문 추가
 adminRouter.post(
   '/orders',
-  adminMiddleware,
+  checkAuthentication(true),
   orderMiddleware,
   orderController.postOrder,
 );
@@ -34,33 +39,37 @@ adminRouter.post(
 // 관리자 주문 수정 (단일 상품)
 adminRouter.put(
   '/orders/:id',
-  adminMiddleware,
+  checkAuthentication(true),
   // orderMiddleware,
   orderController.putOrder,
 );
 // DELETE /api/v1/admin/orders/:id
 // 관리자 주문 삭제 (단일 상품)
-adminRouter.delete('/orders/:id', adminMiddleware, orderController.deleteOrder);
+adminRouter.delete(
+  '/orders/:id',
+  checkAuthentication(true),
+  orderController.deleteOrder,
+);
 
 // PUT /api/v1/admin/categories
 // 관리자 카테고리 추가
 adminRouter.post(
   '/categories',
-  adminMiddleware,
+  checkAuthentication(true),
   categoryController.postCategory,
 );
 // PUT /api/v1/admin/categories/:id
 // 관리자 카테고리 수정
 adminRouter.put(
   '/categories/:id',
-  adminMiddleware,
+  checkAuthentication(true),
   categoryController.putCategory,
 );
 // DELETE /api/v1/admin/categories/:id
 // 관리자 카테고리 삭제
 adminRouter.delete(
   '/categories/:id',
-  adminMiddleware,
+  checkAuthentication(true),
   categoryController.deleteCategory,
 );
 
@@ -68,7 +77,7 @@ adminRouter.delete(
 // 관리자 상품 추가
 adminRouter.post(
   '/products',
-  adminMiddleware,
+  checkAuthentication(true),
   checkProductCategoryFrom,
   productController.postProduct,
 );
@@ -76,7 +85,7 @@ adminRouter.post(
 // 관리자 상품 수정 (단일 상품)
 adminRouter.put(
   '/products/:id',
-  adminMiddleware,
+  checkAuthentication(true),
   // checkProductCategoryFrom,
   productController.putProduct,
 );
@@ -84,12 +93,16 @@ adminRouter.put(
 // 관리자 상품 삭제 (단일 상품)
 adminRouter.delete(
   '/products/:id',
-  adminMiddleware,
+  checkAuthentication(true),
   productController.deleteProduct,
 );
 
 // GET /api/v1/admin/userInfo/
 // 관리자 전체 회원 조회
-adminRouter.get('/userInfo', adminMiddleware, authController.getAllProfile);
+adminRouter.get(
+  '/userInfo',
+  checkAuthentication(true),
+  authController.getAllProfile,
+);
 
 module.exports = adminRouter;
