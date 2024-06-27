@@ -1,4 +1,3 @@
-const adminMiddleware = require('./adminMiddleware');
 const loginMiddleware = require('./loginMiddleware');
 const categoryMiddleware = require('./categoryMiddleware');
 const orderMiddleware = require('./orderMiddleware');
@@ -9,7 +8,6 @@ const {
 } = require('./productMiddleware');
 
 module.exports = {
-  adminMiddleware,
   loginMiddleware,
   categoryMiddleware,
   orderMiddleware,
