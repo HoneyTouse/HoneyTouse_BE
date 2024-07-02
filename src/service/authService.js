@@ -7,6 +7,30 @@ const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
 const withTransaction = require('../misc/transactionUtils');
+const multer = require('multer');
+const path = require('path');
+
+// multer 설정
+const storage = multer.diskStorage({
+  // 파일이 저장될 디렉토리 설정
+  // 디렉토리 : ./uploads
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  // 저장될 파일의 이름을 설정
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + '-' + Date.now() + path.extname(file.originalname),
+    );
+  },
+});
+
+// 단일 파일 업로드
+// 필드 이름은 'profileImage'
+const upload = multer({
+  storage: storage,
+}).single('profileImage');
 
 class AuthService {
   // 회원가입 메소드
@@ -353,6 +377,51 @@ class AuthService {
     } catch (error) {
       throw new Error('비밀번호 변경 중 오류가 발생했습니다.');
     }
+  }
+
+  // 프로필 이미지 변경
+  async uploadProfileImage(req) {
+    return new Promise((resolve, reject) => {
+      upload(req, null, async (err) => {
+        if (err) {
+          console.error('Error uploading profile image:', err);
+          reject({
+            success: false,
+            message: 'Failed to upload profile image.',
+          });
+        } else {
+          try {
+            const imageUrl = req.file.path;
+
+            // JWT 토큰에서 사용자 이메일을 추출하여 사용자 정보 가져오기
+            const token = req.headers.authorization.split(' ')[1];
+            const decodedToken = jwt.verify(token, config.jwtSecret);
+            const userEmail = decodedToken.email;
+
+            // 사용자 정보 업데이트
+            const user = await userDAO.findByEmail(userEmail);
+            if (!user) {
+              throw new AppError(
+                commonErrors.resourceNotFoundError,
+                '해당 이메일로 가입한 회원이 없습니다.',
+                400,
+              );
+            }
+
+            user.profileImage = imageUrl;
+            await user.save();
+
+            resolve({ success: true, imageUrl });
+          } catch (error) {
+            console.error('Error saving profile image URL:', error);
+            reject({
+              success: false,
+              message: 'Failed to save profile image URL.',
+            });
+          }
+        }
+      });
+    });
   }
 }
 

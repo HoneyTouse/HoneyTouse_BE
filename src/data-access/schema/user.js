@@ -46,6 +46,11 @@ const userSchema = new Schema(
       default: 'user',
       enum: ['user', 'admin'], // 해당 필드에 대한 값 제한
     },
+
+    // 프로필 이미지 URL
+    profileImage: {
+      type: String,
+    },
   },
   {
     collection: 'User',

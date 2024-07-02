@@ -43,4 +43,12 @@ authRouter.post(
   authController.postChangePassword,
 );
 
+// POST /api/v1/auth/upload-profile-image
+// 프로필 이미지 변경
+authRouter.post(
+  '/upload-profile-image',
+  loginCheck,
+  authController.postUploadProfileImage,
+);
+
 module.exports = authRouter;
