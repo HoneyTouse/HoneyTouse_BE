@@ -1,12 +1,10 @@
-const mongoose = require('mongoose');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const { productDAO, optionDAO } = require('../data-access');
+const withTransaction = require('../misc/transactionUtils');
 
-/**
- * HTTP request Body
- */
 class ProductService {
+  // 상품 추가
   async createProduct({
     name,
     categoryId,
@@ -16,10 +14,7 @@ class ProductService {
     options,
     description,
   }) {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
+    return withTransaction(async (session) => {
       const newOptions = await optionDAO.create(
         {
           name: options.name,
@@ -28,7 +23,6 @@ class ProductService {
         { session },
       );
 
-      // 아래 계층에 있는 DAO를 호출!
       const newProduct = await productDAO.create(
         {
           name,
@@ -41,23 +35,13 @@ class ProductService {
         },
         { session },
       );
-
-      await session.commitTransaction();
-      session.endSession();
-
       return newProduct;
-    } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      throw error;
-    }
+    });
   }
 
+  // 상품 삭제
   async deleteProduct(id) {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
+    return withTransaction(async (session) => {
       const product = await productDAO.findById(id).session(session);
       if (!product) {
         throw new AppError(
@@ -66,81 +50,86 @@ class ProductService {
           404,
         );
       }
-
       await optionDAO.deleteById(product.options).session(session);
       const deletedProduct = await productDAO.deleteById(id).session(session);
 
-      await session.commitTransaction();
-      session.endSession();
-
       return deletedProduct;
-    } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      throw error;
-    }
+    });
   }
 
+  // 모든 상품 조회
   async getProducts() {
     const products = await productDAO.findMany();
     return products;
   }
 
+  // 카테고리별 상품 조회
   async getProductsByCategoryId(categoryId) {
     const products = await productDAO.findByCategoryId(categoryId);
     return products;
   }
+
+  // 모든 옵션 조회
   async getOptions() {
     const options = await optionDAO.findMany();
     return options;
   }
 
+  // 옵션 ID로 옵션 조회
   async getOptionById(id) {
     const option = await optionDAO.findById(id);
     return option;
   }
+
+  // 상품 ID로 상품 조회
   async getProductById(id) {
     const product = await productDAO.findById(id);
     return product;
   }
 
+  // 상품 수정
   async updateProduct(
     id,
     { name, categoryId, brand, price, image, options, description },
   ) {
-    const product = await productDAO.findById(id);
+    return withTransaction(async (session) => {
+      const product = await productDAO.findById(id);
+      if (product === null) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          '해당 상품이 존재하지 않습니다.',
+          404,
+        );
+      }
 
-    if (product === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 상품이 존재하지 않습니다.',
-        404,
+      const updatedOption = await optionDAO.updateById(product.options, {
+        name: options.name,
+        values: options.values,
+      }); // product.options는 options collection의 ID임
+
+      if (updatedOption === null) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          '해당 상품 또는 옵션이 존재하지 않습니다.',
+          404,
+        );
+      }
+
+      const updatedProduct = await productDAO.updateById(
+        id,
+        {
+          name,
+          categoryId,
+          brand,
+          price,
+          image,
+          description,
+        },
+        { session },
       );
-    }
 
-    const updatedOption = await optionDAO.updateById(product.options, {
-      name: options.name,
-      values: options.values,
-    }); // product.options는 options collection의 ID임
-
-    if (updatedOption === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 상품 또는 옵션이 존재하지 않습니다.',
-        404,
-      );
-    }
-
-    const updatedProduct = await productDAO.updateById(id, {
-      name,
-      categoryId,
-      brand,
-      price,
-      image,
-      description,
+      return updatedProduct;
     });
-
-    return updatedProduct;
   }
 }
 

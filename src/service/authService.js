@@ -6,6 +6,7 @@ const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
+const withTransaction = require('../misc/transactionUtils');
 
 class AuthService {
   // 회원가입 메소드
@@ -17,72 +18,79 @@ class AuthService {
     address,
     addressDetail,
   }) {
-    // 회원가입 폼 : 이름, 이메일, 전화번호, 비밀번호 유효성 검사
-    // 이름
-    if (!isValidName(name)) {
-      throw new AppError(
-        commonErrors.inputError,
-        '이름 형식이 일치하지 않습니다.',
-        400,
+    return withTransaction(async (session) => {
+      // 회원가입 폼 : 이름, 이메일, 전화번호, 비밀번호 유효성 검사
+      // 이름
+      if (!isValidName(name)) {
+        throw new AppError(
+          commonErrors.inputError,
+          '이름 형식이 일치하지 않습니다.',
+          400,
+        );
+      }
+
+      // 연락처
+      if (!isValidPhoneNumber(phoneNumber)) {
+        throw new AppError(
+          commonErrors.inputError,
+          '전화번호 형식이 일치하지 않습니다.',
+          400,
+        );
+      }
+
+      // 이메일
+      if (!isValidEmail(email)) {
+        throw new AppError(
+          commonErrors.inputError,
+          '이메일 형식이 일치하지 않습니다.',
+          400,
+        );
+      }
+
+      // 비밀번호
+      if (!isValidPassword(plainPassword)) {
+        throw new AppError(
+          commonErrors.inputError,
+          '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
+          400,
+        );
+      }
+
+      // 이메일 존재 여부 확인하는 메소드
+      const existingUser = await userDAO.findByEmail(email);
+      if (existingUser && existingUser.email !== null) {
+        throw new AppError(
+          commonErrors.inputError,
+          '이미 존재하는 이메일입니다.',
+          400,
+        );
+      }
+
+      // 회원가입 폼 유효성 검사 통과 & 이메일 중복이 아닌 경우
+      // ---> 회원가입을 진행
+
+      // 비밀번호를 해싱하여 해시화된 비밀번호 생성
+      const hashedPassword = await bcrypt.hash(plainPassword, 15);
+
+      // 회원이 입력한 비밀번호를 해시화된 비밀번호로 변경함.
+      // 변경한 내용으로 다시 회원을 생성함.
+      const newUser = await userDAO.create(
+        {
+          name,
+          phoneNumber,
+          email,
+          password: hashedPassword,
+          address,
+          addressDetail,
+          role: 'user', // 기본적으로 일반회원은 'user', 관리자 계정은 DB에서 생성
+        },
+        {
+          session,
+        },
       );
-    }
 
-    // 연락처
-    if (!isValidPhoneNumber(phoneNumber)) {
-      throw new AppError(
-        commonErrors.inputError,
-        '전화번호 형식이 일치하지 않습니다.',
-        400,
-      );
-    }
-
-    // 이메일
-    if (!isValidEmail(email)) {
-      throw new AppError(
-        commonErrors.inputError,
-        '이메일 형식이 일치하지 않습니다.',
-        400,
-      );
-    }
-
-    // 비밀번호
-    if (!isValidPassword(plainPassword)) {
-      throw new AppError(
-        commonErrors.inputError,
-        '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
-        400,
-      );
-    }
-
-    // 이메일 존재 여부 확인하는 메소드
-    const existingUser = await userDAO.findByEmail(email);
-    if (existingUser && existingUser.email !== null) {
-      throw new AppError(
-        commonErrors.inputError,
-        '이미 존재하는 이메일입니다.',
-        400,
-      );
-    }
-
-    // 회원가입 폼 유효성 검사 통과 & 이메일 중복이 아닌 경우
-    // ---> 회원가입을 진행
-
-    // 비밀번호를 해싱하여 해시화된 비밀번호 생성
-    const hashedPassword = await bcrypt.hash(plainPassword, 15);
-
-    // 회원이 입력한 비밀번호를 해시화된 비밀번호로 변경함.
-    // 변경한 내용으로 다시 회원을 생성함.
-    const newUser = await userDAO.create({
-      name,
-      phoneNumber,
-      email,
-      password: hashedPassword,
-      address,
-      addressDetail,
-      role: 'user', // 기본적으로 일반회원은 'user'이고, 관리자 계정은 DB에서 생성
+      return newUser;
     });
-
-    return newUser;
   }
 
   // 로그인 메소드
@@ -147,7 +155,7 @@ class AuthService {
 
   // 개인정보 수정 메소드
   async updateProfile({ email, address, addressDetail, password }) {
-    try {
+    return withTransaction(async (session) => {
       const user = await userDAO.findByEmail(email);
 
       if (!user) {
@@ -188,15 +196,9 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, 15);
         updatedUser.password = hashedPassword;
       }
-      await userDAO.updateById(user._id, updatedUser);
+      await userDAO.updateById(user._id, updatedUser, { session });
       return updatedUser;
-    } catch (error) {
-      throw new AppError(
-        commonErrors.serverError,
-        '개인정보 수정 중에 오류가 발생했습니다.',
-        500,
-      );
-    }
+    });
   }
 
   // 모든 회원 정보 조회 메소드 (관리자)
@@ -251,8 +253,9 @@ class AuthService {
 
   // 개인정보 삭제 (회원탈퇴) 메소드
   async deleteProfile(email) {
-    try {
+    return withTransaction(async (session) => {
       const user = await userDAO.findByEmail(email);
+
       if (!user) {
         throw new AppError(
           commonErrors.resourceNotFoundError,
@@ -260,15 +263,9 @@ class AuthService {
           400,
         );
       }
-      await userDAO.deleteByEmail(email);
+      await userDAO.deleteByEmail(email, { session });
       return user;
-    } catch (error) {
-      throw new AppError(
-        commonErrors.serverError,
-        '개인정보 삭제 중에 오류가 발생했습니다.',
-        500,
-      );
-    }
+    });
   }
 
   // 이메일 인증 발송 메소드

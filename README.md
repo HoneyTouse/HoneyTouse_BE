@@ -128,16 +128,26 @@ Tool : GitMind
 
 ## 구현 내용
 
-> -
+> - 트랜잭션을 고려한 CRUD 작업
 > - Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현
-> - Passport를 활용한 구글 로그인 구현
+> - Passport를 활용한 소셜 로그인 (구글 로그인) 구현
 >   <br>
 
-### 1.
+### 1. 트랜잭션을 고려한 CRUD 작업
 
-- 내용
-- 이유
-- 효과
+- <b>내용</b> :  서비스 모듈에서 생성, 수정, 삭제 메소드에 mongoose 트랜잭션을 적용함.
+- <b>이유</b> : 작업 중 데이터 일관성과 무결성을 보장하기 위함임.
+- <b>효과</b> : 작업 실패 시 변경 사항을 롤백하여 부분 업데이트를 방지하고, 데이터베이스 안정성을 유지할 수 있음.
+
+<details>
+<summary><i>트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</i></summary>
+<div markdown="1">
+
+https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC
+
+</div>
+</details>
+<br>
 
 ### 2. Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현
 
@@ -145,11 +155,103 @@ Tool : GitMind
 - <b>이유</b> : 원래 서버에서 발송한 인증코드를 확인하는 로직으로 구현을 하였음. 하지만 데이터베이스 저장 없이 즉시 검증하는 것이 더 비효율적이라고 판단하였음. <u>시간마다 자동 생성되는 것을 코드로 직접 구현해야 하며, 빈번한 코드 생성을 하게 되므로 서버에 부담이 됨.</u>
 - <b>효과</b> : 확인 기간을 제한하여 보안을 강화하고 오용 가능성을 줄일 수 있음.
 
+<details>
+<summary><i> 인증 코드 저장 스키마 - data-access/schema/emailVerification.js</i></summary>
+<div markdown="1">
+
+```
+const { Schema } = require('mongoose');
+
+const emailVerificationSchema = new Schema(
+  {
+    // 전송요청한 이메일
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    // 서버에서 발송한 인증 번호
+    verificationCode: {
+      type: String,
+      required: true,
+    },
+
+    // 생성 시각
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      expires: '5m', // 5분 후에 문서가 자동으로 삭제되도록 설정
+    },
+  },
+  {
+    collection: 'EmailVerification',
+    versionKey: false,
+    timestamps: true,
+  },
+);
+
+module.exports = emailVerificationSchema;
+```
+
+</div>
+</details>
+
+<details>
+<summary><i> 이메일 인증 발송 - service/authService.js</i></summary>
+<div markdown="1">
+
+```
+  // 이메일 인증 발송 메소드
+  async sendVerificationCode(toemail) {
+    const transporter = createTransporter();
+
+    function createTransporter() {
+      return nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: config.adminEmail, // 보내는 이메일 주소
+          pass: config.adminPW, // 보내는 이메일 계정의 암호
+        },
+      });
+    }
+    // 랜덤한 6자리 숫자 생성
+    const generateVerificationCode = () => {
+      return Math.floor(100000 + Math.random() * 900000);
+    };
+
+    let verificationCode = generateVerificationCode();
+
+    const mailOptions = {
+      from: 'honeytousedb@gmail.com', // 보내는 이메일 주소
+      to: toemail, // 수신자 이메일 주소
+      subject: '꿀단집 쇼핑몰 이메일 인증 코드', // 이메일 제목
+      text: `인증 코드: ${verificationCode}`, // 이메일 내용
+    };
+
+    // 인증 코드 이메일 발송
+    await transporter.sendMail(mailOptions);
+    console.log('인증 코드 이메일이 성공적으로 전송되었습니다.');
+
+    // DB의 EmailVerification모델에 해당 내역을 저장
+    await EmailVerification.create({ email: toemail, verificationCode });
+
+    return verificationCode;
+  }
+```
+
+</div>
+</details>
+<br>
+
 ### 3. Passport를 활용한 구글 로그인 구현
 
-- 내용
-- 이유
-- 효과
+- <b>내용</b>
+- <b>이유</b>
+- <b>효과</b>
 
 ---
 
