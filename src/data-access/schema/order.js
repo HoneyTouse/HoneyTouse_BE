@@ -17,35 +17,37 @@ const orderSchema = new Schema(
     },
     //구매자
     customerId: {
-      type: 'String'
+      type: 'String',
     },
     //상품
-    product: [{
-      id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
+    product: [
+      {
+        id: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+        },
+        name: {
+          type: String,
+          required: true,
+        },
+        count: {
+          type: Number,
+          required: true,
+        },
+        image: {
+          type: String,
+          required: true,
+        },
+        options: {
+          type: Schema.Types.ObjectId,
+          ref: 'Option',
+        },
       },
-      name: {
-        type: String,
-        required: true,
-      },
-      count: {
-        type: Number,
-        required: true,
-      },
-      image: {
-        type: String,
-        required: true,
-      },
-      options: {
-        type: Schema.Types.ObjectId,
-        ref: 'Option'
-      },
-    }],
+    ],
     //배송메모
     memo: {
-        type: String,
-      },
+      type: String,
+    },
     // 결제금액
     payment: {
       //총 상품금액
@@ -56,15 +58,15 @@ const orderSchema = new Schema(
       //총 배송비
       ttlPriceDelivery: {
         type: Number,
-        default: 0
+        default: 0,
       },
       //총 결제금액
       ttlPrice: {
         type: Number,
         required: true,
-      }
+      },
     },
-    },
+  },
   {
     collection: 'Order',
     versionKey: false,

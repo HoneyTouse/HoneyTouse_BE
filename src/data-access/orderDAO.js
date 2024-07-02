@@ -41,7 +41,7 @@ class OrderDAO {
         customerId,
         product,
         memo,
-        payment
+        payment,
       },
       {
         runValidators: true,
