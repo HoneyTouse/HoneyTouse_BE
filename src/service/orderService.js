@@ -1,27 +1,42 @@
+const mongoose = require('mongoose');
 const { orderDAO } = require('../data-access');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 
 class OrderService {
-  //주문 추가
+  // 주문 추가
   async createOrder({ status, customerId, product, memo, payment }) {
-    const newOrder = await orderDAO.create({
-      status,
-      customerId,
-      product,
-      memo,
-      payment
-    });
-    if (newOrder === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '잘못된 요청입니다.',
-        400,
-      );
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const newOrder = await orderDAO.create({
+        status,
+        customerId,
+        product,
+        memo,
+        payment,
+      });
+      if (newOrder === null) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          '잘못된 요청입니다.',
+          400,
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return newOrder;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
     }
-    return newOrder;
   }
-  //주문 1개 조회
+
+  // 주문 1개 조회
   async getOrder(id) {
     const order = await orderDAO.findById(id);
     if (order === null) {
@@ -33,7 +48,8 @@ class OrderService {
     }
     return order;
   }
-  //주문 여러개 조회
+
+  // 주문 여러개 조회
   async getOrders() {
     const orders = await orderDAO.findMany();
     if (orders === null) {
@@ -45,7 +61,8 @@ class OrderService {
     }
     return orders;
   }
-  //사용자별 주문 조회
+
+  // 사용자별 주문 조회
   async getOrdersByCustomerId(customerId) {
     const orders = await orderDAO.findByCustomerId(customerId);
     return orders;
@@ -54,14 +71,15 @@ class OrderService {
     const orders = await orderDAO.getOrdersByStatus(status);
     return orders;
   }
-  //주문 수정
+
+  // 주문 수정
   async updateOrder(id, { status, customerId, product, memo, payment }) {
     const updatedOrder = await orderDAO.updateOne(id, {
       status,
       customerId,
       product,
       memo,
-      payment
+      payment,
     });
     if (updatedOrder === null) {
       throw new AppError(
@@ -72,17 +90,31 @@ class OrderService {
     }
     return updatedOrder;
   }
-  //주문 삭제
+  
+  // 주문 삭제
   async deleteOrder(id) {
-    const deletedOrder = await orderDAO.deleteOne(id);
-    if (deletedOrder === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 주문이 존재하지 않습니다',
-        404,
-      );
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const deletedOrder = await orderDAO.deleteOne(id);
+      if (deletedOrder === null) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          '해당 주문이 존재하지 않습니다',
+          404,
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return deletedOrder;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
     }
-    return deletedOrder;
   }
 }
 

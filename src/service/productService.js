@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const { productDAO, optionDAO } = require('../data-access');
@@ -15,30 +16,69 @@ class ProductService {
     options,
     description,
   }) {
-    const newOptions = await optionDAO.create({
-      name: options.name,
-      value: options.value,
-    });
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    // 아래 계층에 있는 DAO를 호출!
-    const newProduct = await productDAO.create({
-      name,
-      categoryId,
-      brand,
-      price,
-      image,
-      options: newOptions._id,
-      description,
-    });
+    try {
+      const newOptions = await optionDAO.create(
+        {
+          name: options.name,
+          value: options.value,
+        },
+        { session },
+      );
 
-    return newProduct;
+      // 아래 계층에 있는 DAO를 호출!
+      const newProduct = await productDAO.create(
+        {
+          name,
+          categoryId,
+          brand,
+          price,
+          image,
+          options: newOptions._id,
+          description,
+        },
+        { session },
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return newProduct;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async deleteProduct(id) {
-    const product = await productDAO.findById(id);
-    await optionDAO.deleteById(product.options);
-    const deletedProduct = await productDAO.deleteById(id);
-    return deletedProduct;
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const product = await productDAO.findById(id).session(session);
+      if (!product) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          'Product not found',
+          404,
+        );
+      }
+
+      await optionDAO.deleteById(product.options).session(session);
+      const deletedProduct = await productDAO.deleteById(id).session(session);
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return deletedProduct;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async getProducts() {
