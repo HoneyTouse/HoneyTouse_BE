@@ -36,10 +36,10 @@
 
   #### <b>진행 방식</b>
 
-  | 구분 | 방식과 내용                                                                                                                                                                                                |
-  | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 1차  | • <b>방식</b> : 프론트엔드와 백엔드 담당자가 <b>`2주 동안 함께`</b> 개발을 진행<br> • <b>위치</b> : (주)엘리스가 보유하고 있는 프라이빗 GitLab 저장소<br> • <b>내용</b> : 인증 기능을 갖춘 기본 CRUD API 개발 |
-  | 2차  | • <b>방식</b> : <b>`필요에 따라`</b> 특정 부분을 담당하는 팀원끼리 소통하여 <b>`추가적인 개발`</b>을 진행함.<br> • <b>위치</b> : 자율적으로 생성한 Github Organization<br> • <b>내용</b> : 추가적으로 필요한 부분을 진행함.  |
+  | 구분 | 방식과 내용                                                                                                                                                                                                                 |
+  | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1차  | • <b>방식</b> : 프론트엔드와 백엔드 담당자가 <b>`2주 동안 함께`</b> 개발을 진행<br> • <b>위치</b> : (주)엘리스가 보유하고 있는 프라이빗 GitLab 저장소<br> • <b>내용</b> : 인증 기능을 갖춘 기본 CRUD API 개발               |
+  | 2차  | • <b>방식</b> : <b>`필요에 따라`</b> 특정 부분을 담당하는 팀원끼리 소통하여 <b>`추가적인 개발`</b>을 진행함.<br> • <b>위치</b> : 자율적으로 생성한 Github Organization<br> • <b>내용</b> : 추가적으로 필요한 부분을 진행함. |
 
   <br>
 
@@ -60,14 +60,13 @@
 
   - <b>백엔드</b> : Node.js, Express, MongoDB, JavaScript, JWT
   - <b>배포</b> : AWS S3, Route53, Cloudfront, EC2
-  - <b>기타</b> : multer S3
 
-| 기술           | 선정 이유                                                                                                                                                                                                                    |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 기술           | 선정 이유                                                                                                                                                                                                                                      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <b>Express</b> | • 가볍고 유연하여 빠르고 확장 가능한 웹 애플리케이션을 구축하는 데 도움이 되는 Node.js 라이브러리임.<br> • 라우팅 및 오류 처리와 같은 <b>`다양한 기능 처리를 단순화`</b>하였기 때문에 <b>`코드 작성이 용이`</b>해 질 것이라고 예상되어 채택함. |
-| <b>MongoDB</b> | • JavaScript 개발자가 데이터를 원활하게 시작하고 작업할 수 있도록 직관적이고 쉽게 만드는 <b>`JSON과 유사한 문서 구조`</b>를 갖고 있어서, 수월한 프로젝트 진행을 위해 채택함.                                                       |
-| <b>JWT</b>     | • stateless(상태 비저장) 인증인 JWT는 서버 로드를 줄이고 인증 프로세스 속도를 높임.                                                                                                                                          |
-| <b>AWS</b>     | • AWS에서 웹 애플리케이션 호스팅 및 배포의 거의 모든 측면을 포괄하는 <b>`광범위한 서비스`</b>를 제공하며, <b>`대량의 트래픽 처리`</b>를 쉽게 할 수 있도록 설계되어 활용함.                                                       |
+| <b>MongoDB</b> | • JavaScript 개발자가 데이터를 원활하게 시작하고 작업할 수 있도록 직관적이고 쉽게 만드는 <b>`JSON과 유사한 문서 구조`</b>를 갖고 있어서, 수월한 프로젝트 진행을 위해 채택함.                                                                   |
+| <b>JWT</b>     | • stateless(상태 비저장) 인증인 JWT는 서버 로드를 줄이고 인증 프로세스 속도를 높임.                                                                                                                                                            |
+| <b>AWS</b>     | • AWS에서 웹 애플리케이션 호스팅 및 배포의 거의 모든 측면을 포괄하는 <b>`광범위한 서비스`</b>를 제공하며, <b>`대량의 트래픽 처리`</b>를 쉽게 할 수 있도록 설계되어 활용함.                                                                     |
 
 - ### 개발환경 <br>
 
@@ -77,7 +76,7 @@
 
 - ### 라이브러리 <br>
 
-  - eslint, prettier, nodemon, bcrypt, cors, dotenv, ejs, express, jsonwebtoken, mongoose, nodemailer, swagger-ui-express, yaml, passport, multer
+  - eslint, prettier, nodemon, bcrypt, cors, dotenv, ejs, express, jsonwebtoken, mongoose, nodemailer, swagger-ui-express, yaml, multer
 
 ---
 
@@ -86,25 +85,6 @@
 ### 전체 프로젝트 구조
 
 <br>
-<br>
-
-### 백엔드 프로젝트 구조
-
-![image](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/76bde51d-591d-426d-863b-4beb404c3330)
-Tool : Figma
-
-<details>
-<summary><b>폴더별 기능 설명</b></summary>
-<div markdown="1">
-
-![image](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/dc2ba495-d43a-49ad-8cc2-d5d45f809e78)
-
-![image](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/6bf39f42-f1de-4f17-a31c-ca270526db76)
-
-![image](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/5fe848b4-977b-4868-86ed-8077704cadd6)
-
-</div>
-</details>
 <br>
 
 ### MongoDB 스키마
@@ -132,10 +112,18 @@ Tool : GitMind
 
 ### 1. 트랜잭션을 고려한 CRUD 작업
 
-- <b>내용</b> :  transactionUtils.js 모듈을 별도로 생성하여 서비스 모듈에서 <b>`생성, 수정, 삭제`</b> 메소드에 mongoose 트랜잭션을 적용함.
+- <b>내용</b> : transactionUtils.js 모듈을 별도로 생성하여 서비스 모듈에서 <b>`생성, 수정, 삭제`</b> 메소드에 mongoose 트랜잭션을 적용함.
 - <b>이유</b> : 작업 중 데이터 일관성과 무결성을 보장하기 위함임.
 - <b>효과</b> : <b>`작업 실패 시 변경 사항을 롤백하여 부분 업데이트를 방지`</b>하고, 데이터베이스 안정성을 유지할 수 있음.
 
+<details>
+<summary><i>트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</i></summary>
+<div markdown="1">
+
+https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC
+
+</div>
+</details>
 <details>
 <summary><i>트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</i></summary>
 <div markdown="1">
@@ -266,46 +254,23 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A
 - <b>내용</b> : 클라이언트가 업로드한 파일을 multer 미들웨어를 통해 서버의 특정 디렉토리에 저장하는 기능을 구현함.
 - <b>이유</b> : http 요청에서 form-data 형식의 데이터를 처리하기 위함.
 - <b>효과</b> : 사용자는 자신의 프로필 이미지를 서버에 업로드하고, 서버는 이 <b>`파일을 특정 디렉토리에 저장`</b>하고, <b>`DB에 있는 이미지 경로를 반환`</b>하여 프로필 이미지를 사용할 수 있게 됨.
-- <b>단점</b> : 
-  - 파일 저장 시 디렉토리 존재 여부를 체크하지 않아 <b>`디렉토리가 없으면 에러가 발생`</b>할 수 있음. 
+- <b>단점</b> :
+  - 파일 저장 시 디렉토리 존재 여부를 체크하지 않아 <b>`디렉토리가 없으면 에러가 발생`</b>할 수 있음.
   - 추가적으로, 서버에 파일을 저장하는 방식은 <b>`서버의 디스크 공간을 많이 차지`</b>할 수 있음.<br>
-→ 추후 진행한 프로젝트에서는 <b>AWS S3과 presigned URL</b>을 활용함.
+  → 추후 진행한 프로젝트에서는 presigned URL을 받아서 AWS S3 버킷에 업로드하는 로직을 구현함.
+
 <details>
 <summary><i>multer로 프로필 이미지 변경 - service/authService.js</i></summary>
 <div markdown="1">
 
-https://github.com/HoneyTouse/HoneyTouse_BE/wiki/multer-%ED%99%9C%EC%9A%A9
+▼ Multer을 활용한 우리 서버에서의 이미지 처리
+https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B2%98%EB%A6%AC
 
 ```
-const multer = require('multer');
-const path = require('path');
-
-// multer 설정
-const storage = multer.diskStorage({
-  // 파일이 저장될 디렉토리 설정
-  // 디렉토리 : ./uploads
-  destination: function (req, file, cb) {
-    cb(null, './uploads');
-  },
-  // 저장될 파일의 이름을 설정
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname),
-    );
-  },
-});
-
-// 단일 파일 업로드
-// 필드 이름은 'profileImage'
-const upload = multer({
-  storage: storage,
-}).single('profileImage');
-
- // 프로필 이미지 변경
+// 프로필 이미지 변경
   async uploadProfileImage(req) {
     return new Promise((resolve, reject) => {
-      upload(req, null, async (err) => {
+      multerConfig.getUploadHandler()(req, null, async (err) => {
         if (err) {
           console.error('Error uploading profile image:', err);
           reject({
@@ -319,10 +284,11 @@ const upload = multer({
             // JWT 토큰에서 사용자 이메일을 추출하여 사용자 정보 가져오기
             const token = req.headers.authorization.split(' ')[1];
             const decodedToken = jwt.verify(token, config.jwtSecret);
-            const userEmail = decodedToken.email;
+            const userId = decodedToken.id;
 
-            // 사용자 정보 업데이트
-            const user = await userDAO.findByEmail(userEmail);
+            // 사용자 찾기
+            let user = await userDAO.findById(userId);
+
             if (!user) {
               throw new AppError(
                 commonErrors.resourceNotFoundError,
@@ -331,10 +297,16 @@ const upload = multer({
               );
             }
 
-            user.profileImage = imageUrl;
-            await user.save();
+            // 사용자 정보 업데이트
+            user.profileImage = imageUrl.replace('src\\public\\', '');
 
-            resolve({ success: true, imageUrl });
+            const newProfileImage = user.profileImage;
+
+            user = await userDAO.updateById(userId, {
+              profileImage: newProfileImage,
+            });
+
+            resolve({ success: true, imageUrl: newProfileImage });
           } catch (error) {
             console.error('Error saving profile image URL:', error);
             reject({
@@ -356,23 +328,35 @@ const upload = multer({
 
 ## 이슈 해결
 
-### 문제
+### 1. 주문 처리 로직에서 비회원인 경우를 미리 고려하지 않은 POST 요청
 
-- **주문 처리 로직에서 비회원인 경우를 미리 고려하지 않은 POST 요청**
-  - 본 쇼핑몰은 회원과 비회원이 모두 상품 주문을 할 수 있음.
-  - 쇼핑몰에 가입한 회원이 POST 요청을 통해 주문하는 경우만 고려하였음.
-  - orderRouter의 orderController 부분에서 customerId를 처리하는 중 로그인 체크 미들웨어를 거쳐서 바로 req.Id로 값을 할당하였음.
-  - 따라서 <b>`비회원은 토큰이 없어서 주문 처리가 되지 않는 문제가 발생`</b>하였음.
-
-### 해결과정
-
-- orderController에서 주문 추가를 담당하는 postOrder 함수를 분기처리하여 회원과 비회원을 구분함.
-  - <b>`회원`</b> : 토큰에서 유저 Id를 확인하여 customerId를 할당
-  - <b>`비회원`</b> : 숫자를 랜덤생성하는 함수를 활용하여 customerId를 할당 (ex.guest_1646056800000_1234)
-- 이를 통해 회원과 비회원이 모두 동일한 서비스를 경험할 수 있으며, <b>`데이터베이스에서는 회원과 비회원을 구분하여 효율적으로 주문내역을 관리`</b>할 수 있게 됨.
+| 항목   | 내용                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 상황   | • 본 쇼핑몰은 <b>`회원과 비회원이 모두`</b> 상품 주문을 할 수 있음.<br> • 쇼핑몰에 가입한 회원이 POST 요청을 통해 주문하는 경우만 고려하였음.<br>• orderRouter의 orderController 부분에서 customerId를 처리하는 중 로그인 체크 미들웨어를 거쳐서 바로 req.Id로 값을 할당하였음.                                                                                                                                                                    |
+| 문제   | • 따라서 <b>`비회원은 토큰이 없어서 주문 처리가 되지 않는 문제가 발생`</b>하였음.                                                                                                                                                                                                                                                                                                                                                                  |
+| 해결   | • orderController에서 주문 추가를 담당하는 postOrder 함수를 분기처리하여 회원과 비회원을 구분함.<br>- <b>`회원`</b> : 토큰에서 유저 Id를 확인하여 customerId를 할당<br>- <b>`비회원`</b> : 숫자를 랜덤생성하는 함수를 활용하여 customerId를 할당 (ex.guest_1646056800000_1234)<br>• 이를 통해 회원과 비회원이 모두 동일한 서비스를 경험할 수 있으며, <b>`데이터베이스에서는 회원과 비회원을 구분하여 효율적으로 주문내역을 관리`</b>할 수 있게 됨. |
+| 느낀점 | • 사전에 로그인을 해야하는 서비스와 그렇지 않은 서비스를 구분하여 로직을 설계하는 것이 중요하다고 느낌.                                                                                                                                                                                                                                                                                                                                                   |
 
 <details>
 <summary><i>회원과 비회원을 구분하는 주문 내역 처리 - controller/orderController.js</i></summary>
+<div markdown="1">
+
+![이슈해결코드](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/89c38b39-4a54-42e8-8718-065591196814)
+
+</div>
+</details>
+<br>
+
+### 2. 
+
+| 항목   | 내용                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 상황   | • 본 쇼핑몰은 <b>`회원과 비회원이 모두`</b> 상품 주문을 할 수 있음.<br> • 쇼핑몰에 가입한 회원이 POST 요청을 통해 주문하는 경우만 고려하였음.<br>• orderRouter의 orderController 부분에서 customerId를 처리하는 중 로그인 체크 미들웨어를 거쳐서 바로 req.Id로 값을 할당하였음.                                                                                                                                                                    |
+| 문제   | • 따라서 <b>`비회원은 토큰이 없어서 주문 처리가 되지 않는 문제가 발생`</b>하였음.                                                                                                                                                                                                                                                                                                                                                                  |
+| 해결   | • orderController에서 주문 추가를 담당하는 postOrder 함수를 분기처리하여 회원과 비회원을 구분함.<br>- <b>`회원`</b> : 토큰에서 유저 Id를 확인하여 customerId를 할당<br>- <b>`비회원`</b> : 숫자를 랜덤생성하는 함수를 활용하여 customerId를 할당 (ex.guest_1646056800000_1234)<br>• 이를 통해 회원과 비회원이 모두 동일한 서비스를 경험할 수 있으며, <b>`데이터베이스에서는 회원과 비회원을 구분하여 효율적으로 주문내역을 관리`</b>할 수 있게 됨. |
+| 느낀점 | • 사전에 로그인을 해야하는 서비스와 그렇지 않은 서비스를 구분하여 로직을 설계하는 것이 중요하다고 느낌.                                                                                                                                                                                                                                                                                                                                                   |
+<details>
+<summary><i>새로 넣어라 - controller/orderController.js</i></summary>
 <div markdown="1">
 
 ![이슈해결코드](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/89c38b39-4a54-42e8-8718-065591196814)
