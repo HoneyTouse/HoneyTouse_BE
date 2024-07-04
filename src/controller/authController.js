@@ -151,6 +151,26 @@ const authController = {
       next(error);
     }
   },
+
+  // 프로필 이미지 변경 컨트롤러
+  async postUploadProfileImage(req, res, next) {
+    try {
+      const result = await authService.uploadProfileImage(req, res);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          message: 'Profile image uploaded successfully.',
+          imageUrl: result.imageUrl,
+        });
+      } else {
+        res.status(400).json({ success: false, message: result.message });
+      }
+    } catch (error) {
+      console.error('Error uploading profile image:', error.message);
+      next(error);
+    }
+  },
 };
 
 module.exports = authController;

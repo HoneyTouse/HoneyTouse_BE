@@ -34,6 +34,7 @@ async function create() {
   expressApp.use(express.json());
   expressApp.use(cors());
   expressApp.use(pinoHttp({ logger }));
+  expressApp.use(express.static(path.join(__dirname, 'public')));
 
   // Health check API
   expressApp.get('/health', (req, res) => {

@@ -7,6 +7,11 @@ const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
 const withTransaction = require('../misc/transactionUtils');
+const formValidator = require('../misc/formValidator');
+const MulterConfig = require('../misc/multerConfig');
+const getProfileImageUrl = require('../misc/profileImageUtils');
+
+const multerConfig = new MulterConfig();
 
 class AuthService {
   // 회원가입 메소드
@@ -21,7 +26,7 @@ class AuthService {
     return withTransaction(async (session) => {
       // 회원가입 폼 : 이름, 이메일, 전화번호, 비밀번호 유효성 검사
       // 이름
-      if (!isValidName(name)) {
+      if (!formValidator.isValidName(name)) {
         throw new AppError(
           commonErrors.inputError,
           '이름 형식이 일치하지 않습니다.',
@@ -30,7 +35,7 @@ class AuthService {
       }
 
       // 연락처
-      if (!isValidPhoneNumber(phoneNumber)) {
+      if (!formValidator.isValidPhoneNumber(phoneNumber)) {
         throw new AppError(
           commonErrors.inputError,
           '전화번호 형식이 일치하지 않습니다.',
@@ -39,7 +44,7 @@ class AuthService {
       }
 
       // 이메일
-      if (!isValidEmail(email)) {
+      if (!formValidator.isValidEmail(email)) {
         throw new AppError(
           commonErrors.inputError,
           '이메일 형식이 일치하지 않습니다.',
@@ -48,7 +53,7 @@ class AuthService {
       }
 
       // 비밀번호
-      if (!isValidPassword(plainPassword)) {
+      if (!formValidator.isValidPassword(plainPassword)) {
         throw new AppError(
           commonErrors.inputError,
           '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
@@ -186,7 +191,7 @@ class AuthService {
 
       // 새로운 비밀번호를 등록한 경우에만 비밀번호 업데이트
       if (password) {
-        if (!isValidPassword(password)) {
+        if (!formValidator.isValidPassword(password)) {
           throw new AppError(
             commonErrors.inputError,
             '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
@@ -233,6 +238,9 @@ class AuthService {
           400,
         );
       }
+
+      const checkedUrl = await getProfileImageUrl(user.profileImage);
+
       // 사용자 정보 반환 가능
       return {
         name: user.name,
@@ -241,6 +249,7 @@ class AuthService {
         address: user.address,
         addressDetail: user.addressDetail,
         role: user.role,
+        profileImage: checkedUrl,
       };
     } catch (error) {
       throw new AppError(
@@ -331,7 +340,7 @@ class AuthService {
   // 새로운 비밀번호로 변경하는 메소드
   async changePassword(email, newPassword, newPasswordConfirm) {
     try {
-      if (!isValidPassword(newPassword)) {
+      if (!formValidator.isValidPassword(newPassword)) {
         throw new Error('비밀번호 형식이 올바르지 않습니다.');
       }
       if (newPassword !== newPasswordConfirm) {
@@ -354,37 +363,65 @@ class AuthService {
       throw new Error('비밀번호 변경 중 오류가 발생했습니다.');
     }
   }
-}
 
-// 회원가입 폼 유효성 검사
+  // 프로필 이미지 변경
+  async uploadProfileImage(req) {
+    return new Promise((resolve, reject) => {
+      multerConfig.getUploadHandler()(req, null, async (err) => {
+        if (err) {
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            reject({
+              success: false,
+              message: 'File size limit exceeded.',
+            });
+          } else {
+            console.error('Error uploading profile image:', err);
+            reject({
+              success: false,
+              message: 'Failed to upload profile image.',
+            });
+          }
+        } else {
+          try {
+            const imageUrl = req.file.path;
 
-// 이름 유효성 검사
-// ---> 한글 2~4자
-function isValidName(name) {
-  const nameRegex = /^[가-힣]{2,4}$/;
-  return nameRegex.test(name);
-}
+            // JWT 토큰에서 사용자 이메일을 추출하여 사용자 정보 가져오기
+            const token = req.headers.authorization.split(' ')[1];
+            const decodedToken = jwt.verify(token, config.jwtSecret);
+            const userId = decodedToken.id;
 
-// 이메일 유효성 검사
-function isValidEmail(email) {
-  const emailRegex =
-    /^(([^<>()[\]\\.,;:\s@\\"]+(\.[^<>()[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i;
-  return emailRegex.test(email);
-}
+            // 사용자 찾기
+            let user = await userDAO.findById(userId);
 
-// 전화번호 유효성 검사
-// ---> 010으로 시작하는 총 11자리 숫자
-function isValidPhoneNumber(phoneNumber) {
-  const phoneNumberRegex = /^010\d{8}$/;
-  return phoneNumberRegex.test(phoneNumber);
-}
+            if (!user) {
+              throw new AppError(
+                commonErrors.resourceNotFoundError,
+                '해당 이메일로 가입한 회원이 없습니다.',
+                400,
+              );
+            }
 
-// 비밀번호 유효성 검사
-// ---> 영문, 숫자, 특수문자를 조합하여 8-16자리를 입력
-// 특수문자 가능한 것 : ! @ # $ % ^ & * ( ) - _ + = < > ?
-function isValidPassword(plainPassword) {
-  const passwordRegex = /^[A-Za-z0-9!@#$%^&*()-_+=<>?]{8,16}$/;
-  return passwordRegex.test(plainPassword);
+            // 사용자 정보 업데이트
+            user.profileImage = imageUrl.replace('src\\public\\', '');
+
+            const newProfileImage = user.profileImage;
+
+            user = await userDAO.updateById(userId, {
+              profileImage: newProfileImage,
+            });
+
+            resolve({ success: true, imageUrl: newProfileImage });
+          } catch (error) {
+            console.error('Error saving profile image URL:', error);
+            reject({
+              success: false,
+              message: 'Failed to save profile image URL.',
+            });
+          }
+        }
+      });
+    });
+  }
 }
 
 module.exports = new AuthService();
