@@ -7,7 +7,11 @@ class MulterConfig {
     this.fieldName = fieldName;
     this.storage = this.createStorage();
     // 단일 파일 업로드, 필드 이름은 'profileImage'
-    this.upload = multer({ storage: this.storage }).single('profileImage');
+    // 최대 2MB 용량으로 제한
+    this.upload = multer({
+      storage: this.storage,
+      limits: { filesize: 2 * 1024 * 1024 },
+    }).single('profileImage');
   }
 
   createStorage() {

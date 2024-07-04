@@ -369,11 +369,18 @@ class AuthService {
     return new Promise((resolve, reject) => {
       multerConfig.getUploadHandler()(req, null, async (err) => {
         if (err) {
-          console.error('Error uploading profile image:', err);
-          reject({
-            success: false,
-            message: 'Failed to upload profile image.',
-          });
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            reject({
+              success: false,
+              message: 'File size limit exceeded.',
+            });
+          } else {
+            console.error('Error uploading profile image:', err);
+            reject({
+              success: false,
+              message: 'Failed to upload profile image.',
+            });
+          }
         } else {
           try {
             const imageUrl = req.file.path;

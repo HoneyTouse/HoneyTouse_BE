@@ -84,6 +84,7 @@
 
 ### 전체 프로젝트 구조
 
+![꿀단집구조(ver 2)](https://github.com/HoneyTouse/.github/assets/127278410/e9218862-d1b5-4452-9f77-f20badc68cd7)
 <br>
 <br>
 
@@ -117,17 +118,9 @@ Tool : GitMind
 - <b>효과</b> : <b>`작업 실패 시 변경 사항을 롤백하여 부분 업데이트를 방지`</b>하고, 데이터베이스 안정성을 유지할 수 있음.
 
 <details>
-<summary><i>트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</i></summary>
+<summary><i>우리 서버에서의 트랜잭션 처리</i></summary>
 <div markdown="1">
-
-https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC
-
-</div>
-</details>
-<details>
-<summary><i>트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</i></summary>
-<div markdown="1">
-
+<b>▼ 트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</b>
 https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC
 
 </div>
@@ -240,8 +233,9 @@ module.exports = emailVerificationSchema;
 <details>
 <summary><i>pino를 적용한 후 로그 출력</i></summary>
 <div markdown="1">
-
+<b>▼ logging library 활용</b>
 https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A%A9
+<br>
 
 ![pino설정](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/eed6f796-4c2c-4c6a-9969-c6df85c66df0)
 
@@ -252,12 +246,12 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A
 ### 4. multer를 활용한 이미지 업로드 처리
 
 - <b>내용</b> : 클라이언트가 업로드한 파일을 multer 미들웨어를 통해 서버의 특정 디렉토리에 저장하는 기능을 구현함.
-- <b>이유</b> : http 요청에서 form-data 형식의 데이터를 처리하기 위함.
+- <b>이유</b> : 프로필 이미지 변경하는 기능 구현 중 http 요청에서 form-data 형식의 데이터를 처리하기 위함.
 - <b>효과</b> : 사용자는 자신의 프로필 이미지를 서버에 업로드하고, 서버는 이 <b>`파일을 특정 디렉토리에 저장`</b>하고, <b>`DB에 있는 이미지 경로를 반환`</b>하여 프로필 이미지를 사용할 수 있게 됨.
 - <b>단점</b> :
   - 파일 저장 시 디렉토리 존재 여부를 체크하지 않아 <b>`디렉토리가 없으면 에러가 발생`</b>할 수 있음.
   - 추가적으로, 서버에 파일을 저장하는 방식은 <b>`서버의 디스크 공간을 많이 차지`</b>할 수 있음.<br>
-  → 추후 진행한 프로젝트에서는 presigned URL을 받아서 AWS S3 버킷에 업로드하는 로직을 구현함.
+    → 추후 진행한 프로젝트에서는 presigned URL을 받아서 AWS S3 버킷에 업로드하는 로직을 구현함.
 
 <details>
 <summary><i>multer로 프로필 이미지 변경 - service/authService.js</i></summary>
@@ -335,7 +329,7 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
 | 상황   | • 본 쇼핑몰은 <b>`회원과 비회원이 모두`</b> 상품 주문을 할 수 있음.<br> • 쇼핑몰에 가입한 회원이 POST 요청을 통해 주문하는 경우만 고려하였음.<br>• orderRouter의 orderController 부분에서 customerId를 처리하는 중 로그인 체크 미들웨어를 거쳐서 바로 req.Id로 값을 할당하였음.                                                                                                                                                                    |
 | 문제   | • 따라서 <b>`비회원은 토큰이 없어서 주문 처리가 되지 않는 문제가 발생`</b>하였음.                                                                                                                                                                                                                                                                                                                                                                  |
 | 해결   | • orderController에서 주문 추가를 담당하는 postOrder 함수를 분기처리하여 회원과 비회원을 구분함.<br>- <b>`회원`</b> : 토큰에서 유저 Id를 확인하여 customerId를 할당<br>- <b>`비회원`</b> : 숫자를 랜덤생성하는 함수를 활용하여 customerId를 할당 (ex.guest_1646056800000_1234)<br>• 이를 통해 회원과 비회원이 모두 동일한 서비스를 경험할 수 있으며, <b>`데이터베이스에서는 회원과 비회원을 구분하여 효율적으로 주문내역을 관리`</b>할 수 있게 됨. |
-| 느낀점 | • 사전에 로그인을 해야하는 서비스와 그렇지 않은 서비스를 구분하여 로직을 설계하는 것이 중요하다고 느낌.                                                                                                                                                                                                                                                                                                                                                   |
+| 느낀점 | • 사전에 로그인을 해야하는 서비스와 그렇지 않은 서비스를 구분하여 로직을 설계하는 것이 중요하다고 느낌.                                                                                                                                                                                                                                                                                                                                            |
 
 <details>
 <summary><i>회원과 비회원을 구분하는 주문 내역 처리 - controller/orderController.js</i></summary>
@@ -347,19 +341,71 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
 </details>
 <br>
 
-### 2. 
+### 2. 안정적인 서버 이미지 로딩 보장
 
-| 항목   | 내용                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 상황   | • 본 쇼핑몰은 <b>`회원과 비회원이 모두`</b> 상품 주문을 할 수 있음.<br> • 쇼핑몰에 가입한 회원이 POST 요청을 통해 주문하는 경우만 고려하였음.<br>• orderRouter의 orderController 부분에서 customerId를 처리하는 중 로그인 체크 미들웨어를 거쳐서 바로 req.Id로 값을 할당하였음.                                                                                                                                                                    |
-| 문제   | • 따라서 <b>`비회원은 토큰이 없어서 주문 처리가 되지 않는 문제가 발생`</b>하였음.                                                                                                                                                                                                                                                                                                                                                                  |
-| 해결   | • orderController에서 주문 추가를 담당하는 postOrder 함수를 분기처리하여 회원과 비회원을 구분함.<br>- <b>`회원`</b> : 토큰에서 유저 Id를 확인하여 customerId를 할당<br>- <b>`비회원`</b> : 숫자를 랜덤생성하는 함수를 활용하여 customerId를 할당 (ex.guest_1646056800000_1234)<br>• 이를 통해 회원과 비회원이 모두 동일한 서비스를 경험할 수 있으며, <b>`데이터베이스에서는 회원과 비회원을 구분하여 효율적으로 주문내역을 관리`</b>할 수 있게 됨. |
-| 느낀점 | • 사전에 로그인을 해야하는 서비스와 그렇지 않은 서비스를 구분하여 로직을 설계하는 것이 중요하다고 느낌.                                                                                                                                                                                                                                                                                                                                                   |
+| 항목   | 내용                                                                                                                                                                                 |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 상황   | • 프론트엔드에서 서버에 저장된 이미지 파일을 불러올 때, 실제 파일이 있는지 확인하는 여부를 체크하는 로직이 없음.                                                                     |
+| 문제   | • 프론트엔드에서 서버의 URL은 잘 로드되지만 <b>`실제 파일은 존재하지 않아 이미지 렌더링 문제`</b>가 발생하였음.                                                                               |
+| 해결   | • 서버에서 <b>`특정 경로에 이미지가 있는지 확인`</b>하여 유효한 이미지만 로드되도록 하는 유틸리티를 작성함.<br>• 이미지 URL이 유효하지 않은 경우 프론트엔드는 기본 정적 파일을 표시하도록 함. |
+| 느낀점 | • 프로그래밍에서 <b>`예외 상황을 처리`</b>하는 것이 중요하다고 생각함.                                                                                                                        |
+
 <details>
-<summary><i>새로 넣어라 - controller/orderController.js</i></summary>
+<summary><i>이미지 존재 여부 확인 - misc/profileImageUtils.js</i></summary>
 <div markdown="1">
 
-![이슈해결코드](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/89c38b39-4a54-42e8-8718-065591196814)
+```
+const path = require('path');
+const fs = require('fs/promises');
+
+async function getProfileImageUrl(profileImageUrl) {
+  const folderpath = path.join('src', 'public');
+  const imagePath = path.join(folderpath, profileImageUrl);
+
+  try {
+    // 이미지 경로가 유효하면 해당 url 반환
+    await fs.access(imagePath);
+    return profileImageUrl;
+  } catch (error) {
+    // 그렇지 않으면 빈 문자열 반환
+    console.error(`Error accessing profile image`, error);
+    return '';
+  }
+}
+
+module.exports = getProfileImageUrl;
+```
+
+</div>
+</details>
+<br>
+
+### 3. 이미지 업로드 제한 및 압축을 통한 서버 효율성 향상
+
+| 항목   | 내용                                                                                                                                                                            |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 상황   | • multer로 이미지처리 시 <b>`업로드 가능한 이미지 용량을 제한하지 않음.`</b>                                                                |
+| 문제   | • 큰 이미지를 업로드하면 서버 부하와 디스크 사용량이 늘어남.<br>• ex) 10MB 이미지는 10MB의 서버 저장공간을 그대로 소비함.                                                 |
+| 해결   | • 팀 구성원이 사용하는 평균 프로필 이미지 크기를 기준으로 서버에서 이미지 용량을 <b>`최대 2MB로 제한`</b>하였음.<br>• 파일 크기를 초과하면 적절한 에러 메시지를 보냄.<br>• 또한 업로드하기 전에 <b>`이미지를 압축하는 프론트엔드 로직을 추가`</b>함. |
+| 느낀점 | • 서버 개발에서 비용과 시간을 모두 고려하여 효율적으로 로직을 구현해야할 필요성을 느낌.                                                                                         |
+
+<details>
+<summary><i>서버의 이미지 용량 제한 - misc/profileImageUtils.js</i></summary>
+<div markdown="1">
+
+```
+
+```
+
+</div>
+</details>
+<details>
+<summary><i>프론트엔드에서의 이미지 압축 - </i></summary>
+<div markdown="1">
+
+```
+
+```
 
 </div>
 </details>
