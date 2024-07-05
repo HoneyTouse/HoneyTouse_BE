@@ -96,8 +96,8 @@ Tool : Moon Modeler
 <br>
 
 ### 로그인 시퀀스 다이어그램
-
-Tool : GitMind
+![로그인시퀀스그램](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/e22b4799-dd29-4329-b7ad-d9f241985db2)
+Tool : Visual Paradigm
 <br>
 <br>
 
@@ -386,25 +386,106 @@ module.exports = getProfileImageUrl;
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 상황   | • multer로 이미지처리 시 <b>`업로드 가능한 이미지 용량을 제한하지 않음.`</b>                                                                |
 | 문제   | • 큰 이미지를 업로드하면 서버 부하와 디스크 사용량이 늘어남.<br>• ex) 10MB 이미지는 10MB의 서버 저장공간을 그대로 소비함.                                                 |
-| 해결   | • 팀 구성원이 사용하는 평균 프로필 이미지 크기를 기준으로 서버에서 이미지 용량을 <b>`최대 2MB로 제한`</b>하였음.<br>• 파일 크기를 초과하면 적절한 에러 메시지를 보냄.<br>• 또한 업로드하기 전에 <b>`이미지를 압축하는 프론트엔드 로직을 추가`</b>함. |
+| 해결   | • <b>서버</b><br>- 이미지 용량을 <b>`최대 1MB로 제한`</b>하였음.<br>- 파일 크기를 초과하면 적절한 에러 메시지를 보냄.<br>• <b>프론트엔드</b><br>- 업로드하기 전 이미지 최대 용량을 1MB로 설정함.<br>- 1MB를 초과하면 <b>`최대 너비 또는 높이를 70%로 줄여 압축`</b>함.<br>- 압축한 후에도 파일 크기가 1MB를 초과하면 업로드되지 않도록 함. |
 | 느낀점 | • 서버 개발에서 비용과 시간을 모두 고려하여 효율적으로 로직을 구현해야할 필요성을 느낌.                                                                                         |
-
 <details>
-<summary><i>서버의 이미지 용량 제한 - misc/profileImageUtils.js</i></summary>
+<summary><i>이미지 압축하여 업로드 (시연 GIF)</i> </summary>
+<div markdown="1">
+
+![이미지압축해서업로드](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/0c35dd5a-0abc-4b11-9d00-0c61aa37933d)
+
+</div>
+</details>
+<details>
+<summary><i>서버의 이미지 용량 제한 - misc/multerConfig.js</i></summary>
 <div markdown="1">
 
 ```
+const multer = require('multer');
+const path = require('path');
 
+class MulterConfig {
+  constructor(uploadDir = './src/public/uploads', fieldName = 'profileImage') {
+    this.uploadDir = uploadDir;
+    this.fieldName = fieldName;
+    this.storage = this.createStorage();
+    // 단일 파일 업로드, 필드 이름은 'profileImage'
+    // 최대 1MB 용량으로 제한
+    this.upload = multer({
+      storage: this.storage,
+      limits: { filesize: 1 * 1024 * 1024 },
+    }).single('profileImage');
+  }
+
+  createStorage() {
+    return multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, this.uploadDir);
+      },
+      filename: (req, file, cb) => {
+        cb(
+          null,
+          file.fieldname + '-' + Date.now() + path.extname(file.originalname),
+        );
+      },
+    });
+  }
+
+  getUploadHandler() {
+    return this.upload;
+  }
+}
+
+module.exports = MulterConfig;
 ```
 
 </div>
 </details>
 <details>
-<summary><i>프론트엔드에서의 이미지 압축 - </i></summary>
+<summary><i>프론트엔드에서의 이미지 압축 - myPage.js</i></summary>
 <div markdown="1">
 
 ```
+// 이미지 압축
+async function handleImageUpload(event) {
+  const imageFile = event.target.files[0];
+  console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+  console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
 
+  const options = {
+    maxSizeMB: 1, // 최대 용량 2MB
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
+  };
+
+  try {
+    let compressedFile = await imageCompression(imageFile, options);
+
+    if (compressedFile.size / 1024 / 1024 > 1) {
+      const resizeOptions = {
+        maxSizeMB: 1, // 최대 용량 1MB
+        maxWidthOrHeight: 1920 * 0.7, // 70% 크기
+        useWebWorker: true,
+      };
+      compressedFile = await imageCompression(imageFile, resizeOptions);
+    }
+
+    console.log(
+      "compressedFile instanceof Blob",
+      compressedFile instanceof Blob
+    );
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
+
+    if (compressedFile.size / 1024 / 1024 <= 1) {
+      await uploadToServer(compressedFile);
+    } else {
+      alert("프로필 이미지가 1MB를 초과하여 업로드할 수 없습니다.");
+    }
+  } catch (error) {
+    console.log(error);
+    alert("프로필 이미지 업로드 중 오류가 발생했습니다.");
+  }
+}
 ```
 
 </div>
