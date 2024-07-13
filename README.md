@@ -93,14 +93,14 @@
 ### MongoDB 스키마
 
 ![꿀단집mongodb스키마](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/9c1f5ece-9a82-4b77-ae8b-37d6661df0ab)
-Tool : Moon Modeler
+<b>Tool</b> : Moon Modeler
 <br>
 <br>
 
 ### 로그인 시퀀스 다이어그램
 
 ![로그인시퀀스그램](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/e22b4799-dd29-4329-b7ad-d9f241985db2)
-Tool : Visual Paradigm
+<br><b>Tool</b> : Visual Paradigm
 <br>
 <br>
 
