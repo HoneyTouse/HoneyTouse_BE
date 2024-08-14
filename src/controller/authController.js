@@ -1,4 +1,4 @@
-const { authService } = require('../service');
+const { authService, googleOAuthService } = require('../service');
 const utils = require('../misc/utils');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
@@ -37,6 +37,28 @@ const authController = {
 
       res.status(201).json(utils.buildResponse(token));
     } catch (error) {
+      next(error);
+    }
+  },
+
+  // 구글 로그인 요청
+  async getGoogleLogin(req, res, next) {
+    try {
+      console.log('컨트롤러, 구글 로그인 요청');
+      googleOAuthService.authenticateGoogle(req, res, next);
+    } catch (error) {
+      console.error('Error in getGoogleLogin:', error.message);
+      next(error);
+    }
+  },
+
+  // 구글 로그인 콜백 처리
+  async getGoogleCallback(req, res, next) {
+    try {
+      console.log('컨트롤러, 구글 로그인 콜백 처리 요청');
+      googleOAuthService.handleGoogleCallback(req, res, next);
+    } catch (error) {
+      console.error('Error in getGoogleCallback:', error.message);
       next(error);
     }
   },

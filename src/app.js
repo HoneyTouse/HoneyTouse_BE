@@ -4,6 +4,8 @@ const path = require('node:path');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
+const passport = require('./passport/googleStrategy');
+const session = require('express-session');
 
 const loader = require('./loader');
 const config = require('./config');
@@ -33,6 +35,16 @@ async function create() {
   const expressApp = express();
   expressApp.use(express.json());
   expressApp.use(cors());
+  expressApp.use(
+    session({
+      secret: config.sesssionSecret,
+      resave: false,
+      saveUninitialized: true,
+    }),
+  );
+  // Passport 초기화 및 세션 설정
+  expressApp.use(passport.initialize());
+  expressApp.use(passport.session());
   expressApp.use(pinoHttp({ logger }));
   expressApp.use(express.static(path.join(__dirname, 'public')));
 

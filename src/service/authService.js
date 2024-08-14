@@ -132,22 +132,9 @@ class AuthService {
         );
       }
 
-      // MongoDB에서 자동 생성되는 id를 자바스크립트로 변환
-      const id = user._id.toString();
+      const newToken = this.generateToken(user);
 
-      // 로그인 성공 후 jwt 토큰 생성
-      const tokenPayload = {
-        id,
-        email,
-        role: user.role,
-      };
-
-      // Access Token 발급하기
-      const accessToken = jwt.sign(tokenPayload, config.jwtSecret, {
-        expiresIn: '6h',
-      });
-
-      return { token: accessToken };
+      return { token: newToken };
     } catch (error) {
       console.error('로그인 에러:', error.message);
       throw new AppError(
@@ -156,6 +143,26 @@ class AuthService {
         401,
       );
     }
+  }
+
+  // 토큰 생성 메소드 (아이디, 이메일, 역할)
+  async generateToken(user) {
+    // MongoDB에서 자동 생성되는 id를 자바스크립트로 변환
+    const id = user._id.toString();
+
+    // 로그인 성공 후 jwt 토큰 생성
+    const tokenPayload = {
+      id,
+      email: user.email,
+      role: user.role,
+    };
+
+    // Access Token 발급하기
+    const accessToken = jwt.sign(tokenPayload, config.jwtSecret, {
+      expiresIn: '6h',
+    });
+
+    return { token: accessToken };
   }
 
   // 개인정보 수정 메소드
