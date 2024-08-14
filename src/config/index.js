@@ -35,4 +35,14 @@ module.exports = {
   adminLoginpw: process.env.ADMIN_Login_PW, // 관리자 계정 로그인 비밀번호
 
   adminPW: process.env.ADMIN_PW, // 관리자 계정 구글 앱 비밀번호 (메일 발송용)
+
+  googleClientId: process.env.GOOGLE_CLIENT_ID, // 구글로그인 아이디
+
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET, // 구글로그인 비밀번호
+
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL, // 구글로그인 콜백 URL
+
+  sesssionSecret: process.env.SESSION_SECRET, // 세션 비밀번호
+
+  ClientUrl: process.env.CLIENT_URL, // 클라이언트 리다이렉션 주소
 };

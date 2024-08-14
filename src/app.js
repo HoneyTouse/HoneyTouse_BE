@@ -4,6 +4,8 @@ const path = require('node:path');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
+const passport = require('./passport/googleStrategy');
+const session = require('express-session');
 
 const loader = require('./loader');
 const config = require('./config');
@@ -33,6 +35,16 @@ async function create() {
   const expressApp = express();
   expressApp.use(express.json());
   expressApp.use(cors());
+  expressApp.use(
+    session({
+      secret: config.sesssionSecret,
+      resave: false,
+      saveUninitialized: true,
+    }),
+  );
+  // Passport 초기화 및 세션 설정
+  expressApp.use(passport.initialize());
+  expressApp.use(passport.session());
   expressApp.use(pinoHttp({ logger }));
   expressApp.use(express.static(path.join(__dirname, 'public')));
 
@@ -70,11 +82,22 @@ async function create() {
   // 에러 핸들러 등록
   // eslint-disable-next-line
   expressApp.use((error, req, res, next) => {
-    logger.error({ error }, 'Request Failed');
+    logger.error(
+      {
+        message: error.message,
+        stack: error.stack,
+        url: req.originalUrl,
+        method: req.method,
+        headers: req.headers,
+        body: req.body,
+      },
+      'Request Failed',
+    );
     res.statusCode = error.httpCode ?? 500;
     res.json({
       data: null,
       error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     });
   });
   console.log('express application 준비가 완료되었습니다.');

@@ -11,19 +11,19 @@ const userSchema = new Schema(
     // 연락처
     phoneNumber: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     // 주소
     address: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     //상세주소
     addressDetail: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     // 이메일 주소
@@ -36,7 +36,7 @@ const userSchema = new Schema(
     // 비밀번호
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     // 계정구분 (유저 혹은 관리자)
