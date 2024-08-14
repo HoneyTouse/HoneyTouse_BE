@@ -25,6 +25,7 @@ authRouter.get(
 );
 
 // 구글 로그인 콜백 처리
+// GET /api/v1/auth/google/callback
 authRouter.get(
   '/google/callback',
   passport.authenticate('google', { session: false }),
