@@ -32,9 +32,14 @@ async function create() {
     },
   });
 
+  const corsOptions = {
+    origin: 'https://www.honeytouse.com',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
+
   const expressApp = express();
   expressApp.use(express.json());
-  expressApp.use(cors());
+  expressApp.use(cors(corsOptions));
   expressApp.use(
     session({
       secret: config.sesssionSecret,
