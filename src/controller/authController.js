@@ -44,7 +44,6 @@ const authController = {
   // 구글 로그인 요청
   async getGoogleLogin(req, res, next) {
     try {
-      console.log('컨트롤러, 구글 로그인 요청');
       googleOAuthService.authenticateGoogle(req, res, next);
     } catch (error) {
       console.error('Error in getGoogleLogin:', error.message);
@@ -55,7 +54,6 @@ const authController = {
   // 구글 로그인 콜백 처리
   async getGoogleCallback(req, res, next) {
     try {
-      console.log('컨트롤러, 구글 로그인 콜백 처리 요청');
       googleOAuthService.handleGoogleCallback(req, res, next);
     } catch (error) {
       console.error('Error in getGoogleCallback:', error.message);
@@ -107,6 +105,7 @@ const authController = {
 
       res.status(200).json(utils.buildResponse(userProfile));
     } catch (error) {
+      console.error('컨트롤러 에러', error.message);
       next(error);
     }
   },

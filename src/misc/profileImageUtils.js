@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs/promises');
 
 async function getProfileImageUrl(profileImageUrl) {
+  if (!profileImageUrl) return ''; // 없으면 빈 문자열
+
   const folderpath = path.join('src', 'public');
   const imagePath = path.join(folderpath, profileImageUrl);
 

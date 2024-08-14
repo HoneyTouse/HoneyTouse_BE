@@ -1,6 +1,7 @@
 const express = require('express');
+const config = require('../config');
 const { authController } = require('../controller');
-const { authService } = require('../service');  
+const { authService } = require('../service');
 const loginCheck = require('../middleware/loginMiddleware');
 const passport = require('passport');
 
@@ -31,13 +32,14 @@ authRouter.get(
     if (req.user) {
       try {
         const token = await authService.generateToken(req.user);
-        res.redirect(`/?token=${token.token}`);
+        // res.json({ token: token.token });
+        // res.redirect(`http://localhost:8080?token=${token.token}`);
+        res.redirect(`${config.ClientUrl}?token=${token.token}`);
       } catch (error) {
         console.error('Error generating token:', error);
-        res.redirect('/login'); 
       }
     } else {
-      res.redirect('/login');
+      console.log('No req.user!');
     }
   },
 );

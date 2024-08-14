@@ -251,14 +251,18 @@ class AuthService {
       // 사용자 정보 반환 가능
       return {
         name: user.name,
-        phoneNumber: user.phoneNumber,
+        phoneNumber: user.phoneNumber ?? null,
         email: user.email,
-        address: user.address,
-        addressDetail: user.addressDetail,
+        address: user.address ?? null,
+        addressDetail: user.addressDetail ?? null,
         role: user.role,
-        profileImage: checkedUrl,
+        profileImage: checkedUrl ?? null,
       };
     } catch (error) {
+      console.error({
+        message: error.message,
+        stack: error.stack,
+      });
       throw new AppError(
         commonErrors.serverError,
         '개인정보 조회 중에 오류가 발생했습니다.',

@@ -28,7 +28,6 @@ passport.use(
             role: 'user',
           });
         }
-        console.log('user!!!!!!!!!!!!!!!!!!!!!!!!', user);
 
         // 사용자 정보를 반환
         done(null, user);
@@ -47,7 +46,6 @@ passport.serializeUser((user, done) => {
     }
     done(null, user);
   } catch (error) {
-    console.log(user);
     done(error);
   }
 });

@@ -82,11 +82,22 @@ async function create() {
   // 에러 핸들러 등록
   // eslint-disable-next-line
   expressApp.use((error, req, res, next) => {
-    logger.error({ error }, 'Request Failed');
+    logger.error(
+      {
+        message: error.message,
+        stack: error.stack,
+        url: req.originalUrl,
+        method: req.method,
+        headers: req.headers,
+        body: req.body,
+      },
+      'Request Failed',
+    );
     res.statusCode = error.httpCode ?? 500;
     res.json({
       data: null,
       error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     });
   });
   console.log('express application 준비가 완료되었습니다.');
