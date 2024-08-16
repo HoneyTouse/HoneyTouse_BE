@@ -1,22 +1,67 @@
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
-const loginMiddleware = (req, res, next) => {
-  const token = req.token || extractToken(req);
+// 관리자 여부를 확인해야 할 때는 requireAdmin을 true로 설정
+const checkAuthentication =
+  (requireAdmin = false) =>
+  (req, res, next) => {
+    try {
+      // req.token에서 토큰을 가져옵니다.
+      const token = req.token || extractToken(req);
 
-  if (!token) {
-    return next(
-      new AppError(
-        commonErrors.authenticationError,
-        '토큰이 비어있습니다.',
-        401,
-      ),
-    );
-  }
+      // 토큰이 없을 경우
+      if (!token) {
+        return next(
+          new AppError(
+            commonErrors.authenticationError,
+            '토큰이 비어있습니다.',
+            401,
+          ),
+        );
+      }
 
-  req.token = token;
-  next();
-};
+      // 토큰이 유효한지 확인
+      const secretKey = config.jwtSecret || 'secretkey';
+
+      jwt.verify(token, secretKey, function (err, jwtDecoded) {
+        if (err) {
+          return handleTokenError(err, next);
+        }
+
+        // 토큰에서 사용자 정보 추출
+        const { id, email, role } = jwtDecoded;
+
+        // req 객체에 사용자 정보 저장
+        req.userId = id;
+        req.userEmail = email;
+        req.userRole = role;
+
+        // 관리자인지 확인
+        if (requireAdmin && role !== 'admin') {
+          return next(
+            new AppError(
+              commonErrors.authorizationError,
+              '접근 권한이 없습니다.',
+              403,
+            ),
+          );
+        }
+
+        next();
+      });
+    } catch (error) {
+      console.log('error: ', error);
+      next(
+        new AppError(
+          commonErrors.authorizationError,
+          '접근 권한이 없습니다.',
+          403,
+        ),
+      );
+    }
+  };
 
 const extractToken = (req) => {
   if (req.headers.authorization) {
@@ -33,101 +78,23 @@ const extractToken = (req) => {
   return null;
 };
 
-module.exports = loginMiddleware;
+const handleTokenError = (err, next) => {
+  let errorMessage = '토큰 검증 중 오류가 발생했습니다.';
+  let statusCode = 401;
 
-// // 관리자 여부를 확인해야할 때는 requireAdmin을 true로 설정
-// const checkAuthentication =
-//   (requireAdmin = false) =>
-//   (req, res, next) => {
-//     try {
-//       // 헤더에서 토큰 추출
-//       const token = req.headers.authorization.split(' ')[1];
+  switch (err.name) {
+    case 'TokenExpiredError':
+      errorMessage = '토큰이 만료되었습니다.';
+      break;
+    case 'JsonWebTokenError':
+      errorMessage = '유효하지 않은 토큰입니다.';
+      break;
+    case 'NotBeforeError':
+      errorMessage = '토큰이 아직 활성화되지 않았습니다.';
+      break;
+  }
 
-//       // 토큰 문자열이 없거나 null인지 확인
-//       if (!token || token === '') {
-//         next(
-//           new AppError(
-//             commonErrors.authenticationError,
-//             '토큰이 비어있습니다.',
-//             401,
-//           ),
-//         );
-//         return;
-//       }
+  next(new AppError(commonErrors.authorizationError, errorMessage, statusCode));
+};
 
-//       // 해당 token이 정상적인 token인지 확인
-//       const secretKey = config.jwtSecret || 'secretkey';
-
-//       // 토큰 에러 종류별로 처리
-//       jwt.verify(token, secretKey, function (err, jwtDecoded) {
-//         if (err) {
-//           if (err.name === 'TokenExpiredError') {
-//             next(
-//               new AppError(
-//                 commonErrors.authorizationError,
-//                 '토큰이 만료되었습니다.',
-//                 401,
-//               ),
-//             );
-//           } else if (err.name === 'JsonWebTokenError') {
-//             next(
-//               new AppError(
-//                 commonErrors.authorizationError,
-//                 '유효하지 않은 토큰입니다.',
-//                 401,
-//               ),
-//             );
-//           } else if (err.name === 'NotBeforeError') {
-//             next(
-//               new AppError(
-//                 commonErrors.authorizationError,
-//                 '토큰이 아직 활성화되지 않았습니다.',
-//                 401,
-//               ),
-//             );
-//           } else {
-//             next(
-//               new AppError(
-//                 commonErrors.authorizationError,
-//                 '토큰 검증 중 오류가 발생했습니다.',
-//                 401,
-//               ),
-//             );
-//           }
-//           return;
-//         }
-
-//         // 토큰에서 이메일, 역할 추출
-//         const { id, email, role } = jwtDecoded;
-
-//         // request 객체에 사용자 id, 이메일, 역할 추출
-//         req.userId = id;
-//         req.userEmail = email;
-//         req.userRole = role;
-
-//         // 관리자인지 확인
-//         if (requireAdmin && req.userRole !== 'admin') {
-//           return next(
-//             new AppError(
-//               commonErrors.authorizationError,
-//               '접근 권한이 없습니다.',
-//               403,
-//             ),
-//           );
-//         }
-
-//         next();
-//       });
-//     } catch (error) {
-//       console.log('error: ', error);
-//       next(
-//         new AppError(
-//           commonErrors.authorizationError,
-//           '접근 권한이 없습니다.',
-//           403,
-//         ),
-//       );
-//     }
-//   };
-
-// module.exports = checkAuthentication;
+module.exports = checkAuthentication;

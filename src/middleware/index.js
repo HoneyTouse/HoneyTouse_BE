@@ -6,6 +6,8 @@ const {
   checkProductCategoryFrom,
   checkOptionIdFrom,
 } = require('./productMiddleware');
+const tokenHandlingMiddleware = require('./tokenHandlingMiddleware');
+const loginStatusMiddleware = require('./loginStatusMiddleware');
 
 module.exports = {
   loginMiddleware,
@@ -14,4 +16,6 @@ module.exports = {
   checkProductIdFrom,
   checkProductCategoryFrom,
   checkOptionIdFrom,
+  loginStatusMiddleware,
+  tokenHandlingMiddleware,
 };
