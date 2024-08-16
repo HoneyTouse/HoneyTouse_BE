@@ -1,7 +1,7 @@
 const express = require('express');
 const { orderController } = require('../controller');
 const { orderMiddleware } = require('../middleware');
-const loginCheck = require('../middleware/loginMiddleware');
+const checkAuthentication = require('../middleware/loginMiddleware');
 const orderRouter = express.Router();
 
 // POST /api/v1/orders
@@ -14,7 +14,7 @@ orderRouter.get('/:id', orderController.getOrder);
 
 // GET /api/v1/orders
 // 구매자별 주문 조회 (여러 개)
-orderRouter.get('/', loginCheck, orderController.getOrders);
+orderRouter.get('/', checkAuthentication(), orderController.getOrders);
 
 // PUT /api/v1/orders/:id
 // 주문 수정 (단일 주문)

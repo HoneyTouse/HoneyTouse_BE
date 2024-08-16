@@ -1,7 +1,7 @@
 const express = require('express');
 const { authController } = require('../controller');
 const { authService } = require('../service');
-const loginCheck = require('../middleware/loginMiddleware');
+const checkAuthentication = require('../middleware/loginMiddleware');
 const loginStatus = require('../middleware/loginStatusMiddleware');
 const tokenHandlingMiddleware = require('../middleware/tokenHandlingMiddleware');
 const passport = require('passport');
@@ -63,7 +63,7 @@ authRouter.get(
 // 개인정보 수정 (주소, 비밀번호만 수정 가능)
 authRouter.patch(
   '/me',
-  loginCheck,
+  checkAuthentication(),
   tokenHandlingMiddleware,
   authController.patchUpdateProfile,
 );
@@ -72,7 +72,7 @@ authRouter.patch(
 // 개인정보 조회
 authRouter.get(
   '/me',
-  loginCheck,
+  checkAuthentication(),
   tokenHandlingMiddleware,
   authController.getProfile,
 );
@@ -81,7 +81,7 @@ authRouter.get(
 // 개인정보 삭제 (탈퇴)
 authRouter.post(
   '/withdraw',
-  loginCheck,
+  checkAuthentication(),
   tokenHandlingMiddleware,
   authController.postDeleteProfile,
 );
@@ -101,7 +101,7 @@ authRouter.post('/confirm-email', authController.postVerifyEmail);
 // 비밀번호 변경
 authRouter.post(
   '/change-password',
-  loginCheck,
+  checkAuthentication(),
   tokenHandlingMiddleware,
   authController.postChangePassword,
 );
@@ -110,7 +110,7 @@ authRouter.post(
 // 프로필 이미지 변경
 authRouter.post(
   '/upload-profile-image',
-  loginCheck,
+  checkAuthentication(),
   tokenHandlingMiddleware,
   authController.postUploadProfileImage,
 );

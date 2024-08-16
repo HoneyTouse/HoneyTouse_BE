@@ -134,7 +134,7 @@ class AuthService {
 
       const newToken = this.generateToken(user);
 
-      return { token: newToken };
+      return newToken;
     } catch (error) {
       console.error('로그인 에러:', error.message);
       throw new AppError(

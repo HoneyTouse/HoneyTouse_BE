@@ -56,7 +56,6 @@ const authController = {
       const token = req.token; // 미들웨어에서 저장된 토큰 가져오기
 
       if (token) {
-        console.log('미들웨어 토큰', token);
         res.json({ loggedIn: true, token: token });
       } else {
         res.json({ loggedIn: false });

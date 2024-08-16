@@ -37,6 +37,7 @@ const checkAuthentication =
         req.userId = id;
         req.userEmail = email;
         req.userRole = role;
+        req.token = token;
 
         // 관리자인지 확인
         if (requireAdmin && role !== 'admin') {
