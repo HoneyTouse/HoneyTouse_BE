@@ -1,7 +1,7 @@
 const { categoryDAO } = require('../data-access');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
-const withTransaction = require('../misc/transactionUtils');
+const withTransaction = require('../settings/transactionUtils');
 
 class CategoryService {
   // 카테고리 생성 메소드

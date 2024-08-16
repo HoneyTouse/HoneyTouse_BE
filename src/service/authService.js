@@ -6,10 +6,10 @@ const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
-const withTransaction = require('../misc/transactionUtils');
-const formValidator = require('../misc/formValidator');
-const MulterConfig = require('../misc/multerConfig');
-const getProfileImageUrl = require('../misc/profileImageUtils');
+const withTransaction = require('../settings/transactionUtils');
+const formValidator = require('../settings/formValidator');
+const MulterConfig = require('../settings/multerConfig');
+const getProfileImageUrl = require('../settings/profileImageUtils');
 
 const multerConfig = new MulterConfig();
 
@@ -143,6 +143,29 @@ class AuthService {
         401,
       );
     }
+  }
+
+  // 로그아웃
+  async signOut(req, res) {
+    // 세션 종료
+    await new Promise((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) {
+          return reject(new Error('Failed to destroy session'));
+        }
+        resolve();
+      });
+    });
+
+    // 쿠키 삭제
+    res.clearCookie('token', {
+      httpOnly: true,
+      path: '/',
+    });
+    res.clearCookie('connect.sid', {
+      httpOnly: true,
+      path: '/',
+    });
   }
 
   // 토큰 생성 메소드 (아이디, 이메일, 역할)

@@ -11,6 +11,9 @@ jobs: # 워크플로우 내에서 수행할 작업을 정의
     runs-on: ubuntu-latest # 작업을 수행할 환경을 지정
 
     steps: # 작업 내에서 수행할 단계를 정의
+      - name: Checkout code # 저장소에서 최신 코드를 가져오는지 확인
+        uses: actions/checkout@v3
+
       - name: excusting remote ssh commands # 해당 단계의 이름을 원격 ssh 명령 실행으로 설정
         uses: appleboy/ssh-action@master # appleboy/ssh-action 사용
         with: #입력 변수 설정
@@ -23,4 +26,30 @@ jobs: # 워크플로우 내에서 수행할 작업을 정의
             git pull origin master
             pm2 kill
             npm i
+            npm run pm2:production
+
+            # 환경변수 파일에 다음 내용을 추가한다.
+            echo "GOOGLE_CALLBACK_URL=https://www.honeytouse.com/auth/google/callback" >> .env
+            echo "CLIENT_URL=https://www.honeytouse.com" >> .env
+            echo "COOKIE_DOMAIN=https://www.honeytouse.com" >> .env
+            echo "COOKIE_SECURE=true" >> .env
+            echo "COOKIE_SAMESITE=none" >> .env
+
+            # 환경변수의 중복을 방지한다.
+            awk -v var="GOOGLE_CALLBACK_URL=https://www.honeytouse.com/auth/google/callback" \
+              'BEGIN{found=0} /^GOOGLE_CALLBACK_URL/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
+
+            awk -v var="CLIENT_URL=https://www.honeytouse.com" \
+              'BEGIN{found=0} /^CLIENT_URL/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
+
+            awk -v var="COOKIE_DOMAIN=https://www.honeytouse.com" \
+              'BEGIN{found=0} /^COOKIE_DOMAIN/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
+
+            awk -v var="COOKIE_SECURE=true" \
+              'BEGIN{found=0} /^COOKIE_SECURE/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
+
+            awk -v var="COOKIE_SAMESITE=none" \
+              'BEGIN{found=0} /^COOKIE_SAMESITE/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
+
+            # PM2를 실행한다.
             npm run pm2:production
