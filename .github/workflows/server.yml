@@ -50,6 +50,3 @@ jobs: # 워크플로우 내에서 수행할 작업을 정의
 
             awk -v var="COOKIE_SAMESITE=none" \
               'BEGIN{found=0} /^COOKIE_SAMESITE/{print var; found=1; next} {print} END{if(!found)print var}' .env > .env.tmp && mv .env.tmp .env
-
-            # PM2를 실행한다.
-            npm run pm2:production
