@@ -6,6 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
 const passport = require('./passport/googleStrategy');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const loader = require('./loader');
 const config = require('./config');
@@ -33,13 +34,19 @@ async function create() {
   });
 
   const corsOptions = {
-    origin: 'https://www.honeytouse.com',
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: [
+      'https://www.honeytouse.com',
+      'http://localhost:8080',
+      'http://127.0.0.1:8080',
+    ],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   };
 
   const expressApp = express();
   expressApp.use(express.json());
   expressApp.use(cors(corsOptions));
+  expressApp.use(cookieParser());
   expressApp.use(
     session({
       secret: config.sesssionSecret,

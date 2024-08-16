@@ -4,18 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
-    "start:dev": "cross-env NODE_ENV=development nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
+    "start": "nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
+    "start:dev": "cross-env node_env=development nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint bin src",
     "format": "prettier --write .",
-    "pm2:production": "cross-env NODE_ENV=production pm2 start bin/index.js"
+    "pm2:production": "pm2 start bin/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.4",
     "ejs": "^3.1.9",

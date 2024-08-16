@@ -2,8 +2,10 @@ const express = require('express');
 const { authController } = require('../controller');
 const { authService } = require('../service');
 const loginCheck = require('../middleware/loginMiddleware');
+const loginStatus = require('../middleware/loginStatusMiddleware');
+const tokenHandlingMiddleware = require('../middleware/tokenHandlingMiddleware');
 const passport = require('passport');
-const { getCookieOptions } = require('../settings/cookieOptions');
+const { ClientUrl } = require('../config');
 
 const authRouter = express.Router();
 
@@ -14,6 +16,14 @@ authRouter.post('/sign-up', authController.postSignUp);
 // POST /api/v1/auth/sign-in
 // 로그인
 authRouter.post('/sign-in', authController.postSignIn);
+
+// GET /api/v1/auth/sign-out
+// 로그아웃
+authRouter.post('/sign-out', authController.getSignOut);
+
+// GET /api/vi/auth/status
+// 클라이언트에서 로그인 여부 확인할 때 결과를 리턴하는 API
+authRouter.get('/status', loginStatus, authController.checkStatus);
 
 // 구글 로그인 요청
 // GET /api/v1/auth/google
@@ -34,9 +44,15 @@ authRouter.get(
       try {
         const token = await authService.generateToken(req.user);
 
-        res.cookie('token', token, getCookieOptions());
+        const cookieOptions = {
+          httpOnly: true,
+          domain: 'localhost',
+          maxAge: 60 * 60 * 1000 * 5, // 5시간
+        };
 
-        res.redirect('/');
+        res.cookie('token', token.token, cookieOptions);
+
+        res.redirect(`${ClientUrl}`);
       } catch (error) {
         console.error('Error generating token:', error);
         res.status(500).send('Internal Server Error');
@@ -50,15 +66,30 @@ authRouter.get(
 
 // PATCH /api/v1/auth/me
 // 개인정보 수정 (주소, 비밀번호만 수정 가능)
-authRouter.patch('/me', loginCheck, authController.patchUpdateProfile);
+authRouter.patch(
+  '/me',
+  loginCheck,
+  tokenHandlingMiddleware,
+  authController.patchUpdateProfile,
+);
 
 // GET /api/v1/auth/me
 // 개인정보 조회
-authRouter.get('/me', loginCheck, authController.getProfile);
+authRouter.get(
+  '/me',
+  loginCheck,
+  tokenHandlingMiddleware,
+  authController.getProfile,
+);
 
 // POST /api/v1/auth/withdraw
 // 개인정보 삭제 (탈퇴)
-authRouter.post('/withdraw', loginCheck, authController.postDeleteProfile);
+authRouter.post(
+  '/withdraw',
+  loginCheck,
+  tokenHandlingMiddleware,
+  authController.postDeleteProfile,
+);
 
 // POST /api/v1/auth/send-confirmation-email
 // 이메일 인증요청
@@ -76,6 +107,7 @@ authRouter.post('/confirm-email', authController.postVerifyEmail);
 authRouter.post(
   '/change-password',
   loginCheck,
+  tokenHandlingMiddleware,
   authController.postChangePassword,
 );
 
@@ -84,6 +116,7 @@ authRouter.post(
 authRouter.post(
   '/upload-profile-image',
   loginCheck,
+  tokenHandlingMiddleware,
   authController.postUploadProfileImage,
 );
 
