@@ -1,7 +1,7 @@
 const { orderDAO } = require('../data-access');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
-const withTransaction = require('../misc/transactionUtils');
+const withTransaction = require('../settings/transactionUtils');
 
 class OrderService {
   // 주문 추가

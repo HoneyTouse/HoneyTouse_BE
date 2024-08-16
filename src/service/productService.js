@@ -1,7 +1,7 @@
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const { productDAO, optionDAO } = require('../data-access');
-const withTransaction = require('../misc/transactionUtils');
+const withTransaction = require('../settings/transactionUtils');
 
 class ProductService {
   // 상품 추가

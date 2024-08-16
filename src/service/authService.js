@@ -6,10 +6,10 @@ const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
-const withTransaction = require('../misc/transactionUtils');
-const formValidator = require('../misc/formValidator');
-const MulterConfig = require('../misc/multerConfig');
-const getProfileImageUrl = require('../misc/profileImageUtils');
+const withTransaction = require('../settings/transactionUtils');
+const formValidator = require('../settings/formValidator');
+const MulterConfig = require('../settings/multerConfig');
+const getProfileImageUrl = require('../settings/profileImageUtils');
 
 const multerConfig = new MulterConfig();
 

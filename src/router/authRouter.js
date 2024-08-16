@@ -1,9 +1,9 @@
 const express = require('express');
-const config = require('../config');
 const { authController } = require('../controller');
 const { authService } = require('../service');
 const loginCheck = require('../middleware/loginMiddleware');
 const passport = require('passport');
+const { getCookieOptions } = require('../settings/cookieOptions');
 
 const authRouter = express.Router();
 
@@ -28,30 +28,25 @@ authRouter.get(
 // GET /api/v1/auth/google/callback
 authRouter.get(
   '/google/callback',
-  passport.authenticate('google', { session: false }),
+  passport.authenticate('google', { session: true }),
   async (req, res) => {
     if (req.user) {
       try {
         const token = await authService.generateToken(req.user);
-        // res.json({ token: token.token });
-        // res.redirect(`http://localhost:8080?token=${token.token}`);
-        res.redirect(`${config.ClientUrl}?token=${token.token}`);
+
+        res.cookie('token', token, getCookieOptions());
+
+        res.redirect('/');
       } catch (error) {
         console.error('Error generating token:', error);
+        res.status(500).send('Internal Server Error');
       }
     } else {
       console.log('No req.user!');
+      res.status(401).send('Unauthorized');
     }
   },
 );
-
-// // GET /api/v1/auth/google
-// // 구글 로그인 요청
-// authRouter.get('/google', authController.getGoogleLogin);
-
-// // GET /api/v1/auth/google/callback
-// // 구글 로그인 콜백
-// authRouter.get('/google/callback', authController.getGoogleCallback);
 
 // PATCH /api/v1/auth/me
 // 개인정보 수정 (주소, 비밀번호만 수정 가능)
