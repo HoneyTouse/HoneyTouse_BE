@@ -6,6 +6,7 @@ const loginStatus = require('../middleware/loginStatusMiddleware');
 const tokenHandlingMiddleware = require('../middleware/tokenHandlingMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
+const { cookieOptions } = require('../settings/cookieOptions');
 
 const authRouter = express.Router();
 
@@ -43,12 +44,6 @@ authRouter.get(
     if (req.user) {
       try {
         const token = await authService.generateToken(req.user);
-
-        const cookieOptions = {
-          httpOnly: true,
-          domain: 'localhost',
-          maxAge: 60 * 60 * 1000 * 5, // 5시간
-        };
 
         res.cookie('token', token.token, cookieOptions);
 

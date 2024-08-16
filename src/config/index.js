@@ -45,4 +45,10 @@ module.exports = {
   sesssionSecret: process.env.SESSION_SECRET, // 세션 비밀번호
 
   ClientUrl: process.env.CLIENT_URL, // 클라이언트 리다이렉션 주소
+
+  CookieDomain: process.env.COOKIE_DOMAIN, // 쿠키 Domain
+
+  CookieSecure: process.env.COOKIE_SECURE, // 쿠키 Secure
+
+  CookieSamesite: process.env.COOKIE_SAMESITE, // 쿠키 Samesite
 };
