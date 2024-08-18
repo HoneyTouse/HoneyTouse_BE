@@ -1,5 +1,5 @@
-const AppError = require('../misc/AppError');
-const commonErrors = require('../misc/commonErrors');
+const AppError = require('../../misc/AppError');
+const commonErrors = require('../../misc/commonErrors');
 
 // 토큰 검증 중 발생한 오류에 대한 세부적인 에러 처리
 const handleTokenError = (err, next) => {

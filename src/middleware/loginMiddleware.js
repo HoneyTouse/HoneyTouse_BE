@@ -1,7 +1,8 @@
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const jwt = require('jsonwebtoken');
-const handleTokenError = require('./tokenHandling');
+const handleTokenError = require('./utils/tokenHandling');
+const extractToken = require('./utils/extractToken');
 const config = require('../config');
 
 // 관리자 여부를 확인해야 할 때는 requireAdmin을 true로 설정
@@ -62,23 +63,5 @@ const checkAuthentication =
       );
     }
   };
-
-  // 토큰을 추출하는 함수
-const extractToken = (req) => {
-  // 헤더의 authorization에 토큰이 있을 때
-  if (req.headers.authorization) {
-    return req.headers.authorization.split(' ')[1];
-  }
-
-  // 서버가 보낸 쿠키에 토큰이 있을 때
-  if (req.headers.cookie) {
-    const tokenCookie = req.headers.cookie
-      .split('; ')
-      .find((cookie) => cookie.startsWith('token='));
-    return tokenCookie ? tokenCookie.replace('token=', '') : null;
-  }
-
-  return null;
-};
 
 module.exports = checkAuthentication;
