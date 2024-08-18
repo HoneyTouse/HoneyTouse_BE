@@ -1,31 +1,7 @@
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
 
-const tokenHandlingMiddleware = (req, res, next) => {
-  const token = req.token;
-
-  if (!token) {
-    return next();
-  }
-
-  const secretKey = config.jwtSecret || 'secretkey';
-
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      return handleTokenError(err, next);
-    }
-
-    // 토큰이 유효할 경우, 사용자 정보를 req 객체에 저장
-    req.userId = decoded.id;
-    req.userEmail = decoded.email;
-    req.userRole = decoded.role;
-
-    next();
-  });
-};
-
+// 토큰 검증 중 발생한 오류에 대한 세부적인 에러 처리
 const handleTokenError = (err, next) => {
   let errorMessage = '토큰 검증 중 오류가 발생했습니다.';
   let statusCode = 401;
@@ -45,4 +21,4 @@ const handleTokenError = (err, next) => {
   next(new AppError(commonErrors.authorizationError, errorMessage, statusCode));
 };
 
-module.exports = tokenHandlingMiddleware;
+module.exports = handleTokenError;
