@@ -10,6 +10,7 @@ const withTransaction = require('../settings/transactionUtils');
 const formValidator = require('../settings/formValidator');
 const MulterConfig = require('../settings/multerConfig');
 const getProfileImageUrl = require('../settings/profileImageUtils');
+const path = require("path");
 
 const multerConfig = new MulterConfig();
 
@@ -436,7 +437,12 @@ class AuthService {
             }
 
             // 사용자 정보 업데이트
-            user.profileImage = imageUrl.replace('src\\public\\', '');
+            // 윈도우는 경로 구분자가 '\', 리눅스는 '/'를 사용하여 배포환경에서 이 코드가 동작하지 않았음.
+            // user.profileImage = imageUrl.replace('src\\public\\', '');
+
+            const normalizedPath = path.normalize(imageUrl);
+
+            user.profileImage = normalizedPath.replace(path.join('src', 'public') + path.sep, '');
 
             const newProfileImage = user.profileImage;
 

@@ -59,6 +59,8 @@ async function create() {
   expressApp.use(passport.initialize());
   expressApp.use(passport.session());
   expressApp.use(pinoHttp({ logger }));
+
+  // 정적파일 경로 설정
   expressApp.use(express.static(path.join(__dirname, 'public')));
 
   // Health check API
