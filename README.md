@@ -16,6 +16,7 @@
 ## 바로가기
 
 - [프로젝트 개요](#프로젝트-개요)<br>
+- [프로젝트 실행 가이드](#프로젝트 실행 가이드)<br>
 - [프로젝트 아키텍쳐](#프로젝트-아키텍쳐)<br>
 - [구현 내용](#구현-내용)<br>
 - [이슈 해결](#이슈-해결)<br>
@@ -72,13 +73,40 @@
 
 - ### 개발환경 <br>
 
-  - Node.js : v20.9.0<br>
-  - express : ^4.18.2<br>
-  - Mongoose : ^8.1.2<br>
+  - <b>Node.js</b> : v20.9.0<br>
+  - <b>express</b> : ^4.18.2<br>
+  - <b>Mongoose</b> : ^8.1.2<br>
 
 - ### 라이브러리 <br>
 
-  - eslint, prettier, nodemon, bcrypt, cors, dotenv, ejs, express, jsonwebtoken, mongoose, nodemailer, swagger-ui-express, yaml, multer, appleboy/ssh-action
+  - bcrypt, cookie-parser, cors, curl, dotenv, ejs, express, express-session, jsonwebtoken, mongoose, multer, nodemailer, passport, passport-google-oauth20, pino, pino-http, pino-pretty, swagger-ui-express, yaml, appleboy/ssh-action
+
+---
+
+## 프로젝트 실행 가이드
+
+### 1. 의존성 설치
+```
+npm i
+```
+또는
+```
+npm install
+```
+
+### 2. 환경변수 설정
+- .env.example 파일을 기반으로 .env 파일을 생성한다. (파일 이름은 .env이어야 함.)
+- .env 파일을 프로젝트 루트에 생성하고, 필요한 환경 변수를 설정한다.
+
+### 3. 서버 실행
+- 개발 모드에서 실행 (자동으로 파일 변경 감지)
+```
+npm run start:dev
+```
+- 일반 모드에서 실행
+```
+npm run start
+```
 
 ---
 
@@ -99,10 +127,32 @@
 
 ### 로그인 시퀀스 다이어그램
 
-![로그인시퀀스그램](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/e22b4799-dd29-4329-b7ad-d9f241985db2)
-<br><b>Tool</b> : Visual Paradigm
+![로그인시퀀스1(한글)](https://github.com/user-attachments/assets/035d6980-2e07-4616-a3a0-7df5fbe31201)
+<details>
+<summary><b>Login Sequence Diagram (English)</b></summary>
+<div markdown="1">
+
+![로그인시퀀스1(영어)](https://github.com/user-attachments/assets/5a044b51-2720-4371-8a96-8d71d6fba786)
+
+</div>
+</details>
+<br><b>Tool</b> : PlantText
 <br>
 <br>
+
+### 구글 소셜 로그인 시퀀스 다이어그램
+
+![구글시퀀스2](https://github.com/user-attachments/assets/9868de2e-73e8-4136-b50e-bb8f07416d64)
+
+<details>
+<summary><b>Google Social Login Sequence Diagram (English)</b></summary>
+<div markdown="1">
+
+![구글시퀀스1](https://github.com/user-attachments/assets/5e687c99-5cf0-43b3-be78-26512985fa4d)
+
+</div>
+</details>
+<br><b>Tool</b> : PlantText
 
 ---
 
@@ -112,7 +162,7 @@
 > - Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현
 > - Logging 라이브러리인 Pino 적용
 > - multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)
->   <br>
+> - passport와 구글 OAuth를 활용한 소셜 로그인
 
 ### 1. 트랜잭션을 고려한 CRUD 작업
 
@@ -321,6 +371,14 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
 </div>
 </details>
 
+### 5. passport와 구글 OAuth를 활용한 소셜 로그인
+
+- <b>내용</b> : 
+- passport 라이브러리를 사용한 소셜 로그인 과정에서 사용자가 이미 가입되어 있으면 자동으로 <b>`로그인`</b>되며, 가입되지 않은 경우에는 자동으로 <b>`회원가입`</b>이 진행됨. 이 과정에서 회원가입 절차가 간편하게 처리됨.
+- <b>이유</b> : passport와 소셜 로그인 기능을 활용하여 사용자가 쉽게 로그인하고 회원가입할 수 있도록 함. 
+- 쿠키에 액세스 토큰을 저장하여 <b>`프론트엔드에서의 인증 요청을 단순화`</b>시킴.
+- <b>효과</b> : <b>`사용자 인증 과정이 간편`</b>해지며, 별도의 로그인 절차 없이 구글 계정으로 쉽게 접근할 수 있게 됨.
+
 ---
 
 ## 이슈 해결
@@ -494,6 +552,88 @@ async function handleImageUpload(event) {
 
 </div>
 </details>
+<br>
+
+### 4. 배포 시 발생한 서버 이미지 경로 처리 문제 해결
+
+| 항목   | 내용                                                                                                                                                                                          |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 상황   | • 서버 수정 후 프로필 이미지 변경 시 서버에서 이미지 URL이 제대로 반환되지 않음.                                                                                                        |
+| 문제   | • 서버에서 파일을 저장하고 해당 경로를 유저 프로필 이미지 URL로 DB에 저장할 때, <b>`윈도우와 리눅스의 경로 구분자 차이`</b>로 인해 문제가 발생하였음. <br>• 윈도우는 <b>`\`</b>를, 리눅스는 <b>`/`</b>를 사용하기 때문에, 경로 처리 코드가 환경에 따라 다르게 동작했음. |
+| 해결   | • <b>`path.normalize`</b>를 사용하여 경로를 표준화한 후, <b>`path.join`</b>과 <b>`path.sep`</b>을 이용해 경로를 올바르게 처리하도록 수정함. <br>• 이로 인해 로컬 환경과 배포 환경 모두에서 일관된 경로 처리가 가능하게 되었음. |
+| 느낀점 | • 예상하지 못한 곳에서 문제가 발생할 수 있으니, 다양한 환경에서의 예외 상황을 잘 처리해야 한다고 느꼈음.                                              
+<details>
+<summary><i>프로필 이미지 변경 후 회원 정보 업데이트 - authService.js</i></summary>
+<div markdown="1">
+
+```
+  // 프로필 이미지 변경
+  async uploadProfileImage(req) {
+    return new Promise((resolve, reject) => {
+      multerConfig.getUploadHandler()(req, null, async (err) => {
+        if (err) {
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            reject({
+              success: false,
+              message: 'File size limit exceeded.',
+            });
+          } else {
+            console.error('Error uploading profile image:', err);
+            reject({
+              success: false,
+              message: 'Failed to upload profile image.',
+            });
+          }
+        } else {
+          try {
+            const imageUrl = req.file.path;
+
+            // JWT 토큰에서 사용자 이메일을 추출하여 사용자 정보 가져오기
+            const token = req.headers.authorization.split(' ')[1];
+            const decodedToken = jwt.verify(token, config.jwtSecret);
+            const userId = decodedToken.id;
+
+            // 사용자 찾기
+            let user = await userDAO.findById(userId);
+
+            if (!user) {
+              throw new AppError(
+                commonErrors.resourceNotFoundError,
+                '해당 이메일로 가입한 회원이 없습니다.',
+                400,
+              );
+            }
+
+            // 사용자 정보 업데이트
+            // 윈도우는 경로 구분자가 '\', 리눅스는 '/'를 사용하여 배포환경에서 이 코드가 동작하지 않았음.
+            // user.profileImage = imageUrl.replace('src\\public\\', '');
+
+            const normalizedPath = path.normalize(imageUrl);
+
+            user.profileImage = normalizedPath.replace(path.join('src', 'public') + path.sep, '');
+
+            const newProfileImage = user.profileImage;
+
+            user = await userDAO.updateById(userId, {
+              profileImage: newProfileImage,
+            });
+
+            resolve({ success: true, imageUrl: newProfileImage });
+          } catch (error) {
+            console.error('Error saving profile image URL:', error);
+            reject({
+              success: false,
+              message: 'Failed to save profile image URL.',
+            });
+          }
+        }
+      });
+    });
+  }
+```
+
+</div>
+</details>                                        |
 
 ---
 
