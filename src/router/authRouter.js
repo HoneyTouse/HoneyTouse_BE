@@ -3,7 +3,6 @@ const { authController } = require('../controller');
 const { authService } = require('../service');
 const checkAuthentication = require('../middleware/loginMiddleware');
 const loginStatus = require('../middleware/loginStatusMiddleware');
-const tokenHandlingMiddleware = require('../middleware/tokenHandlingMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
 const { cookieOptions } = require('../settings/cookieOptions');
@@ -64,7 +63,6 @@ authRouter.get(
 authRouter.patch(
   '/me',
   checkAuthentication(),
-  tokenHandlingMiddleware,
   authController.patchUpdateProfile,
 );
 
@@ -73,7 +71,6 @@ authRouter.patch(
 authRouter.get(
   '/me',
   checkAuthentication(),
-  tokenHandlingMiddleware,
   authController.getProfile,
 );
 
@@ -82,7 +79,6 @@ authRouter.get(
 authRouter.post(
   '/withdraw',
   checkAuthentication(),
-  tokenHandlingMiddleware,
   authController.postDeleteProfile,
 );
 
@@ -102,7 +98,6 @@ authRouter.post('/confirm-email', authController.postVerifyEmail);
 authRouter.post(
   '/change-password',
   checkAuthentication(),
-  tokenHandlingMiddleware,
   authController.postChangePassword,
 );
 
@@ -111,7 +106,6 @@ authRouter.post(
 authRouter.post(
   '/upload-profile-image',
   checkAuthentication(),
-  tokenHandlingMiddleware,
   authController.postUploadProfileImage,
 );
 
