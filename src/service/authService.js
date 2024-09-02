@@ -183,7 +183,7 @@ class AuthService {
 
     // Access Token 발급하기
     const accessToken = jwt.sign(tokenPayload, config.jwtSecret, {
-      expiresIn: '6h',
+      expiresIn: '6h', // 6시간
     });
 
     return { token: accessToken };

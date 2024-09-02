@@ -6,7 +6,7 @@ const cookieOptions = {
   domain: config.CookieDomain,
   secure: config.CookieSecure,
   samesite: config.CookieSamesite,
-  maxAge: 60 * 60 * 1000 * 3, // 3시간
+  maxAge: 60 * 60 * 1000 * 6, // 6시간
 };
 
 module.exports = cookieOptions;
