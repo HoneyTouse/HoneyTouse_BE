@@ -1,6 +1,8 @@
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const jwt = require('jsonwebtoken');
+const handleTokenError = require('./utils/tokenHandling');
+const extractToken = require('./utils/extractToken');
 const config = require('../config');
 
 // 관리자 여부를 확인해야 할 때는 requireAdmin을 true로 설정
@@ -8,7 +10,7 @@ const checkAuthentication =
   (requireAdmin = false) =>
   (req, res, next) => {
     try {
-      // req.token에서 토큰을 가져옵니다.
+      // req.token에서 토큰 가져오기
       const token = req.token || extractToken(req);
 
       // 토큰이 없을 경우
@@ -26,9 +28,7 @@ const checkAuthentication =
       const secretKey = config.jwtSecret || 'secretkey';
 
       jwt.verify(token, secretKey, function (err, jwtDecoded) {
-        if (err) {
-          return handleTokenError(err, next);
-        }
+        if (err) handleTokenError(err, next);
 
         // 토큰에서 사용자 정보 추출
         const { id, email, role } = jwtDecoded;
@@ -63,39 +63,5 @@ const checkAuthentication =
       );
     }
   };
-
-const extractToken = (req) => {
-  if (req.headers.authorization) {
-    return req.headers.authorization.split(' ')[1];
-  }
-
-  if (req.headers.cookie) {
-    const tokenCookie = req.headers.cookie
-      .split('; ')
-      .find((cookie) => cookie.startsWith('token='));
-    return tokenCookie ? tokenCookie.replace('token=', '') : null;
-  }
-
-  return null;
-};
-
-const handleTokenError = (err, next) => {
-  let errorMessage = '토큰 검증 중 오류가 발생했습니다.';
-  let statusCode = 401;
-
-  switch (err.name) {
-    case 'TokenExpiredError':
-      errorMessage = '토큰이 만료되었습니다.';
-      break;
-    case 'JsonWebTokenError':
-      errorMessage = '유효하지 않은 토큰입니다.';
-      break;
-    case 'NotBeforeError':
-      errorMessage = '토큰이 아직 활성화되지 않았습니다.';
-      break;
-  }
-
-  next(new AppError(commonErrors.authorizationError, errorMessage, statusCode));
-};
 
 module.exports = checkAuthentication;
