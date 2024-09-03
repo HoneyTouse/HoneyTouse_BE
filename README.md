@@ -59,16 +59,16 @@
 
 - ### 기술스택 <br>
 
-  - <b>백엔드</b> : Node.js, Express, MongoDB, JavaScript, JWT, Multer
+  - <b>백엔드</b> : Node.js, Express, MongoDB, JavaScript
   - <b>배포</b> : AWS S3, Route53, Cloudfront, EC2, Github actions appleboy/ssh-action
 
 | 기술           | 선정 이유                                                                                                                                                                                                                                      |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <b>Express</b> | • 가볍고 유연하여 빠르고 확장 가능한 웹 애플리케이션을 구축하는 데 도움이 되는 Node.js 라이브러리임.<br> • 라우팅 및 오류 처리와 같은 <b>`다양한 기능 처리를 단순화`</b>하였기 때문에 <b>`코드 작성이 용이`</b>해 질 것이라고 예상되어 채택함. |
-| <b>MongoDB</b> | • JavaScript 개발자가 데이터를 원활하게 시작하고 작업할 수 있도록 직관적이고 쉽게 만드는 <b>`JSON과 유사한 문서 구조`</b>를 갖고 있어서, 수월한 프로젝트 진행을 위해 채택함.                                                                   |
-| <b>JWT</b>     | • stateless(상태 비저장) 인증인 JWT는 서버 로드를 줄이고 인증 프로세스 속도를 높임.                                                                                                                                                            |
-| <b>Multer</b>     | • HTTP 요청에서 파일 데이터를 추출하고 관리하는 프로세스를 단순화하여 서버의 이미지 처리를 편리하게 해주는 장점이 있음.                                                                     |
-| <b>AWS</b>     | • AWS에서 웹 애플리케이션 호스팅 및 배포의 거의 모든 측면을 포괄하는 <b>`광범위한 서비스`</b>를 제공하며, <b>`대량의 트래픽 처리`</b>를 쉽게 할 수 있도록 설계되어 활용함.                                                                     |
+| <b>Express</b> | • 가볍고 유연하여 빠르고 확장 가능한 웹 애플리케이션을 구축하는 데 도움이 되는 <b>`Node.js 라이브러리`</b>임.<br> • 라우팅 및 오류 처리와 같은 <b>`다양한 기능 처리를 단순화`</b>하였기 때문에 <b>`코드 작성이 용이`</b>해 질 것이라고 예상되어 채택함. |
+| <b>MongoDB</b> | • <b>`빠른 조회 성능`</b>: NoSQL은 읽기 연산에 최적화되어 RDB보다 더 빠른 검색 속도를 제공함.<br> • <b>`동적 스키마와 유연한 데이터 구조`</b>: 제품, 주문, 사용자 정보를 중첩된 문서 형태로 저장하여 데이터 구조 변경이 잦은 쇼핑몰에 적합함.<br> • <b>`TTL 기능`</b>: 자동 데이터 만료를 지원하여 회원 가입 시 이메일 인증 등 다양한 용도로 활용할 수 있음.                                                       |
+| <b>JSON Web Token (JWT)</b>     | • <b>`상태 비저장 인증`</b>:  인증을 처리하는 서버의 부하를 줄이고, 빠르고 확장 가능한 인증 프로세스를 제공함. <br> • 이는 서버가 클라이언트의 상태나 세션 정보를 저장하지 않기 때문임.                                                                                                                                                              |
+| <b>Multer</b>     | • <b>`파일 처리 간소화`</b>: HTTP 요청에서 파일 데이터를 손쉽게 추출하고 관리할 수 있어 이미지 처리와 파일 업로드가 간편함.                                              |
+| <b>AWS</b>     | • <b>`광범위한 서비스와 대량 트래픽 처리`</b>: 웹 애플리케이션 호스팅과 배포를 위한 폭넓은 서비스를 제공하며, 대량의 트래픽을 효과적으로 처리함.                                                           |
 | <b>Github Action</b>     | • 스크립트를 작성하여 push할 경우 최신 변경 사항으로 유지됨.<br>• GitHub의 CI/CD 기능을 활용하고 <b>`리포지토리와 원활하게 통합`</b>할 수 있어서 편의성을 높임.                                                              |
 
 - ### 개발환경 <br>
@@ -79,7 +79,7 @@
 
 - ### 라이브러리 <br>
 
-  - bcrypt, cookie-parser, cors, curl, dotenv, ejs, express, express-session, jsonwebtoken, mongoose, multer, nodemailer, passport, passport-google-oauth20, pino, pino-http, pino-pretty, swagger-ui-express, yaml, appleboy/ssh-action
+  - bcrypt, cookie-parser, cors, curl, dotenv, express, express-session, jsonwebtoken, mongoose, multer, nodemailer, passport, passport-google-oauth20, pino, pino-http, pino-pretty, swagger-ui-express, yaml, appleboy/ssh-action
 
 ---
 
@@ -374,11 +374,97 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
 
 ### 5. passport와 구글 OAuth를 활용한 소셜 로그인
 
-- <b>내용</b> : 
-- passport 라이브러리를 사용한 소셜 로그인 과정에서 사용자가 이미 가입되어 있으면 자동으로 <b>`로그인`</b>되며, 가입되지 않은 경우에는 자동으로 <b>`회원가입`</b>이 진행됨. 이 과정에서 회원가입 절차가 간편하게 처리됨.
-- <b>이유</b> : passport와 소셜 로그인 기능을 활용하여 사용자가 쉽게 로그인하고 회원가입할 수 있도록 함. 
-- 쿠키에 액세스 토큰을 저장하여 <b>`프론트엔드에서의 인증 요청을 단순화`</b>시킴.
+- <b>내용</b> : 소셜 로그인 과정에서 사용자가 이미 가입되어 있으면 자동으로 <b>`로그인`</b>되며, 가입되지 않은 경우에는 자동으로 <b>`회원가입`</b>이 진행됨. 이 과정에서 회원가입 절차가 간편하게 처리됨.
+- <b>이유</b> : 
+  - passport.js는 구글로그인 외에도 다양한 소셜 로그인 전략을 지원하여 <b>`확장성과 유연성`</b>을 제공함.
+  - 프론트엔드는 요청 시 토큰을 헤더와 로컬 스토리지에 저장하는 방식으로 구현되었음. 
+  - 이에 맞춰 서버에서는 소셜 로그인 시에는 <b>`쿠키`</b>에 <b>`액세스 토큰`</b>을 저장하고, 로그인 성공 시 쿠키의 액세스 토큰을 검사하여 우리 서버에서 <b>`자체 토큰`</b>을 반환하기로 함. 
+  - 프론트엔드는 이 서버 토큰을 사용하여 일반 로그인과 마찬가지로 요청을 보낼 수 있어서 <b>`사용자에게 일관된 경험을 제공`</b>할 수 있음.
 - <b>효과</b> : <b>`사용자 인증 과정이 간편`</b>해지며, 별도의 로그인 절차 없이 구글 계정으로 쉽게 접근할 수 있게 됨.
+<details>
+<summary><i>구글 OAuth를 활용한 passport 로그인 전략 - passport/googleStrategy.js
+</i></summary>
+<div markdown="1">
+
+```
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { userDAO } = require('../data-access');
+const config = require('../config');
+
+// Google OAuth Strategy 설정
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: config.googleClientId,
+      clientSecret: config.googleClientSecret,
+      callbackURL: config.googleCallbackUrl,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Google에서 제공하는 사용자 프로필 정보
+        const { email, name } = profile._json;
+
+        // 이메일로 사용자를 조회
+        let user = await userDAO.findByEmail(email);
+
+        if (!user) {
+          // 사용자가 없으면 신규 사용자 생성
+          user = await userDAO.create({
+            name,
+            email,
+            password: '', // 구글 로그인은 비밀번호가 필요 없음
+            role: 'user',
+          });
+        }
+
+        // 사용자 정보를 반환
+        done(null, user);
+      } catch (error) {
+        done(error);
+      }
+    },
+  ),
+);
+
+// 세션에 사용자 정보를 저장
+passport.serializeUser((user, done) => {
+  try {
+    if (!user._id) {
+      return done(new Error('User ID is missing'));
+    }
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
+
+// 세션에서 사용자 정보를 복원
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await userDAO.findById(id);
+    if (!user) {
+      return done(new Error('User not found'));
+    }
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
+
+module.exports = passport;
+```
+
+</div>
+</details>
+<details>
+<summary><i> 구글 소셜 로그인 (시연 GIF)</i></summary>
+<div markdown="1">
+
+![구글소셜로그인](https://github.com/user-attachments/assets/bbdf64f8-0228-4f56-9e78-e186b211a9c5)
+
+</div>
+</details>
 
 ---
 
@@ -690,6 +776,6 @@ async function handleImageUpload(event) {
 
 - ### 결론
 
-  - 전반적으로 이 프로젝트를 통해 백엔드 개발에서 신중한 계획과 견고한 디자인의 중요성을 배웠음.
-  - 앞으로는 네트워킹에 대한 이해의 폭을 넓히고, 오류 처리 기술을 향상시키며, 시스템 설계 기술을 연마할 계획임.
-  - 이러한 기초적인 경험은 향후 더욱 복잡하고 효율적인 프로젝트를 위한 기반을 마련함.
+  - 전반적으로 이 프로젝트를 통해 <b>`백엔드 개발에서 신중한 설계의 중요성`</b>을 배웠음.
+  - 앞으로 네트워킹에 대한 이해의 폭을 넓히고, 오류 해결 능력과 시스템 설계 기술을 향상시킬 것임.
+  - 이러한 기초적인 경험은 향후 더욱 복잡하고 효율적인 프로젝트를 위한 기반을 마련해주었음.

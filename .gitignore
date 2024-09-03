@@ -36,3 +36,6 @@ dist-ssr
 .stage.env
 .production.env
 .development.env
+
+# .env.sample 파일은 Git에서 추적
+!.env.sample
