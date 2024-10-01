@@ -15,13 +15,13 @@
 
 ## 바로가기
 
-#### 1. [프로젝트 개요](#1-프로젝트-개요)
-#### 2. [프로젝트 실행 가이드](#2-프로젝트-실행-가이드)
-#### 3. [프로젝트 아키텍쳐](#3-프로젝트-아키텍쳐)
-#### 4. [구현 내용](#4-구현-내용)
-#### 5. [이슈 해결](#5-이슈-해결)
-#### 6. [배포](#6-배포)
-#### 7. [느낀점](#7-느낀점)
+#### 1. [프로젝트 개요](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#1-프로젝트-개요-1)
+#### 2. [프로젝트 실행 가이드](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#2-프로젝트-실행-가이드-1)
+#### 3. [프로젝트 아키텍쳐](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#3-프로젝트-아키텍쳐-1)
+#### 4. [구현 내용](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#4-구현-내용-1)
+#### 5. [이슈 해결](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#5-이슈-해결-1)
+#### 6. [배포](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#6-배포-1)
+#### 7. [느낀점](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#7-느낀점-1)
 
 ---
 
