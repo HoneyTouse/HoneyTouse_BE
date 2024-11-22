@@ -50,9 +50,9 @@
 
   | 이름   | 역할                                                                                                         |
   | ------ | ------------------------------------------------------------------------------------------------------------ |
-  | 문채영 | • Admin <i>(관리자 기능)</i> API 작성<br>• Order <i>(회원/비회원 주문 CRUD)</i> API 작성                     |
-  | 이가린 | • User <i>(인증/인가, multer 이미지 처리, 개인정보 CRUD)</i> API 작성<br> • 클라이언트 및 서버 자동 배포<br> |
-  | 최정민 | • Category <i>(카테고리 CRUD)</i> 작성<br>• Product <i>(상품 CRUD)</i> API 작성<br>                          |
+  | [문채영](https://github.com/yoocho) | • Admin <i>(관리자 기능)</i> API 작성<br>• Order <i>(회원/비회원 주문 CRUD)</i> API 작성                     |
+  | [이가린](https://github.com/devellybutton) | • User <i>(인증/인가, multer 이미지 처리, 개인정보 CRUD)</i> API 작성<br> • 클라이언트 및 서버 자동 배포<br> |
+  | [최정민](https://github.com/ioimmini) | • Category <i>(카테고리 CRUD)</i> 작성<br>• Product <i>(상품 CRUD)</i> API 작성<br>                          |
 
   - 공통 : POSTMAN 및 Thunder Client로 API 테스트 후, 노션으로 문서화
     <br>
