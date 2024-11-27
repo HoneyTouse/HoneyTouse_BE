@@ -53,11 +53,11 @@ async function create() {
       secret: config.sesssionSecret,
       resave: false,
       saveUninitialized: true,
-    }),
+      cookie: { secure: false, httpOnly: true, maxAge: -99999 }
+    })
   );
   // Passport 초기화 및 세션 설정
   expressApp.use(passport.initialize());
-  expressApp.use(passport.session());
   expressApp.use(pinoHttp({ logger }));
 
   // 정적파일 경로 설정

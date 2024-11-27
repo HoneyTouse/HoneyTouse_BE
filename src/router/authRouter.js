@@ -38,7 +38,7 @@ authRouter.get(
 // GET /api/v1/auth/google/callback
 authRouter.get(
   '/google/callback',
-  passport.authenticate('google', { session: true }),
+  passport.authenticate('google', { session: false }),
   async (req, res) => {
     if (req.user) {
       try {
