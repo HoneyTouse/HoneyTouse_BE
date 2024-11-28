@@ -2,10 +2,9 @@ const express = require('express');
 const { authController } = require('../controller');
 const { authService } = require('../service');
 const checkAuthentication = require('../middleware/loginMiddleware');
-const loginStatus = require('../middleware/loginStatusMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
-const { cookieOptions } = require('../settings/cookieOptions');
+const cookieOptions = require('../settings/cookieOptions');
 
 const authRouter = express.Router();
 
@@ -16,14 +15,6 @@ authRouter.post('/sign-up', authController.postSignUp);
 // POST /api/v1/auth/sign-in
 // 로그인
 authRouter.post('/sign-in', authController.postSignIn);
-
-// GET /api/v1/auth/sign-out
-// 로그아웃
-authRouter.post('/sign-out', authController.getSignOut);
-
-// GET /api/vi/auth/status
-// 클라이언트에서 로그인 여부 확인할 때 결과를 리턴하는 API
-authRouter.get('/status', loginStatus, authController.checkStatus);
 
 // 구글 로그인 요청
 // GET /api/v1/auth/google

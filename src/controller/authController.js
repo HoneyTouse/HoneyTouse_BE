@@ -41,51 +41,6 @@ const authController = {
     }
   },
 
-  async getSignOut(req, res, next) {
-    try {
-      await authService.signOut(req, res);
-
-      res.status(200).json({ message: 'Successfully signed out' });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  async checkStatus(req, res, next) {
-    try {
-      const token = req.token; // 미들웨어에서 저장된 토큰 가져오기
-
-      if (token) {
-        res.json({ loggedIn: true, token: token });
-      } else {
-        res.json({ loggedIn: false });
-      }
-    } catch (error) {
-      console.error('error', error.message);
-      next(error);
-    }
-  },
-
-  // 구글 로그인 요청
-  async getGoogleLogin(req, res, next) {
-    try {
-      googleOAuthService.authenticateGoogle(req, res, next);
-    } catch (error) {
-      console.error('Error in getGoogleLogin:', error.message);
-      next(error);
-    }
-  },
-
-  // 구글 로그인 콜백 처리
-  async getGoogleCallback(req, res, next) {
-    try {
-      googleOAuthService.handleGoogleCallback(req, res, next);
-    } catch (error) {
-      console.error('Error in getGoogleCallback:', error.message);
-      next(error);
-    }
-  },
-
   // 개인정보 수정 컨트롤러
   async patchUpdateProfile(req, res, next) {
     try {

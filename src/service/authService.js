@@ -146,29 +146,6 @@ class AuthService {
     }
   }
 
-  // 로그아웃
-  async signOut(req, res) {
-    // 세션 종료
-    await new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) {
-          return reject(new Error('Failed to destroy session'));
-        }
-        resolve();
-      });
-    });
-
-    // 쿠키 삭제
-    res.clearCookie('token', {
-      httpOnly: true,
-      path: '/',
-    });
-    res.clearCookie('connect.sid', {
-      httpOnly: true,
-      path: '/',
-    });
-  }
-
   // 토큰 생성 메소드 (아이디, 이메일, 역할)
   async generateToken(user) {
     // MongoDB에서 자동 생성되는 id를 자바스크립트로 변환
