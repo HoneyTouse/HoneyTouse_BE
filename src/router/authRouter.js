@@ -5,7 +5,7 @@ const checkAuthentication = require('../middleware/loginMiddleware');
 const loginStatus = require('../middleware/loginStatusMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
-const { cookieOptions } = require('../settings/cookieOptions');
+const cookieOptions = require('../settings/cookieOptions');
 
 const authRouter = express.Router();
 

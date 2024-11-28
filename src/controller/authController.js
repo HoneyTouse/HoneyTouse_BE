@@ -41,19 +41,10 @@ const authController = {
     }
   },
 
-  async getSignOut(req, res, next) {
-    try {
-      await authService.signOut(req, res);
-
-      res.status(200).json({ message: 'Successfully signed out' });
-    } catch (error) {
-      next(error);
-    }
-  },
-
+  // 로그인 여부를 확인하는 컨트롤러
   async checkStatus(req, res, next) {
     try {
-      const token = req.token; // 미들웨어에서 저장된 토큰 가져오기
+      const token = req.token; 
 
       if (token) {
         res.json({ loggedIn: true, token: token });
