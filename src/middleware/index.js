@@ -6,7 +6,6 @@ const {
   checkProductCategoryFrom,
   checkOptionIdFrom,
 } = require('./productMiddleware');
-const loginStatusMiddleware = require('./loginStatusMiddleware');
 
 module.exports = {
   loginMiddleware,
@@ -14,6 +13,5 @@ module.exports = {
   orderMiddleware,
   checkProductIdFrom,
   checkProductCategoryFrom,
-  checkOptionIdFrom,
-  loginStatusMiddleware,
+  checkOptionIdFrom
 };

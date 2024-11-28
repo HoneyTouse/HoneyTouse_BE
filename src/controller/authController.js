@@ -41,42 +41,6 @@ const authController = {
     }
   },
 
-  // 로그인 여부를 확인하는 컨트롤러
-  async checkStatus(req, res, next) {
-    try {
-      const token = req.token; 
-
-      if (token) {
-        res.json({ loggedIn: true, token: token });
-      } else {
-        res.json({ loggedIn: false });
-      }
-    } catch (error) {
-      console.error('error', error.message);
-      next(error);
-    }
-  },
-
-  // 구글 로그인 요청
-  async getGoogleLogin(req, res, next) {
-    try {
-      googleOAuthService.authenticateGoogle(req, res, next);
-    } catch (error) {
-      console.error('Error in getGoogleLogin:', error.message);
-      next(error);
-    }
-  },
-
-  // 구글 로그인 콜백 처리
-  async getGoogleCallback(req, res, next) {
-    try {
-      googleOAuthService.handleGoogleCallback(req, res, next);
-    } catch (error) {
-      console.error('Error in getGoogleCallback:', error.message);
-      next(error);
-    }
-  },
-
   // 개인정보 수정 컨트롤러
   async patchUpdateProfile(req, res, next) {
     try {
