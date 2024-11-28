@@ -1,352 +1,979 @@
 openapi: 3.0.3
 info:
-  title: Elice Board - OpenAPI 3.0
-  description: '게시판 서버입니다'
+  title: HoneyTouse (꿀단집) API
+  description: 'HoneyTouse API 명세서'
   version: 1.0.0
 externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+  description: HoneyTouse BackEnd Repository 
+  url: https://github.com/HoneyTouse/HoneyTouse_BE
 servers:
   - url: http://localhost:3000/api/v1
     description: 개발 서버(api/v1)
+  - url: https://api.honeytouse.com/api/v1
+    description: 프로덕션 서버 (실제 환경)
 tags:
-  - name: post
-    description: 게시글
+  - name: auth
+    description: "회원가입, 로그인, 개인정보 관리 관련 API"
+  - name: "admin"
+    description: "관리자 기능을 위한 API (주문 조회, 상품 관리, 카테고리 관리 등)"
+  - name: "category"
+    description: "카테고리 관련 API (상품 카테고리 조회 및 관리)"
+  - name: "product"
+    description: "상품 관련 API (상품 등록, 수정, 삭제 등)"
+  - name: "order"
+    description: "주문 관련 API (주문 조회, 추가, 수정, 삭제 등)"
 paths:
-  /posts:
-    get:
-      tags:
-        - post
-      summary: 모든 게시글 가져오기
-      description: 게시판에 있는 모든 게시글 가져오기
-      operationId: getPosts
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/FullPost'
-                  error:
-                    type: string
-                    nullable: true
+  /auth/sign-up:
     post:
       tags:
-        - post
-      summary: 게시글 추가
-      description: 게시글을 게시판에 추가
-      operationId: addPost
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Post'
-        required: true
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Post'
-                  error:
-                    type: string
-                    nullable: true
-        '400':
-          description: title, content, author중 하나라도 없는 경우
-  /posts/{postId}:
-    get:
-      tags:
-        - post
-      summary: 특정 게시글 가져오기
-      description: 게시글 ID로 게시글 하나 가져오기
-      operationId: getPost
+        - "auth"
+      summary: "회원가입"
+      description: "새로운 사용자를 등록합니다."
       parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
+        - name: "body"
+          in: "body"
+          description: "회원가입 정보"
           required: true
           schema:
-            type: string
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              phoneNumber:
+                type: "string"
+              email:
+                type: "string"
+              password:
+                type: "string"
+              address:
+                type: "string"
+              addressDetail:
+                type: "string"
       responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/FullPost'
-                  error:
-                    type: string
-                    nullable: true
-        '404':
-          description: 해당 게시글이 존재하지 않는 경우
-    put:
-      tags:
-        - post
-      summary: 게시글 수정
-      description: 게시글 ID로 게시글 내용 수정
-      operationId: updatePost
-      parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Post'
-        required: true
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Post'
-                  error:
-                    type: string
-                    nullable: true
-        '400':
-          description: title, content, author 모두 없는 경우
-        '404':
-          description: 해당 게시글이 존재하지 않는 경우
-    delete:
-      tags:
-        - post
-      summary: 게시글 삭제
-      description: 게시글 ID로 게시글 삭제
-      operationId: deletePost
-      parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Post'
-                  error:
-                    type: string
-                    nullable: true
-        '404':
-          description: 해당 게시글이 존재하지 않는 경우
-  /posts/{postId}/comments:
-    get:
-      tags:
-        - post
-      summary: 특정 게시글에 있는 모든 댓글 가져오기
-      description: 특정 게시글에 있는 모든 댓글 가져오기
-      operationId: getPostComments
-      parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Comment'
-                  error:
-                    type: string
-                    nullable: true
+        200:
+          description: "회원가입 성공"
+        400:
+          description: "잘못된 요청"
+        500:
+          description: "서버 오류"
+
+  /auth/sign-in:
     post:
       tags:
-        - post
-      summary: 특정 게시글에 댓글 달기
-      description: 특정 게시글에 댓글 달기
-      operationId: addPostComment
+        - "auth"
+      summary: "로그인"
+      description: "사용자가 로그인합니다."
       parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
+        - name: "body"
+          in: "body"
+          description: "로그인 정보"
           required: true
           schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Comment'
-        required: true
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
       responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
+        200:
+          description: "로그인 성공"
+        401:
+          description: "인증 실패"
+
+  /auth/me:
+    get:
+      tags:
+        - "auth"
+      summary: "개인정보 조회"
+      description: "로그인된 사용자의 정보를 조회합니다."
+      parameters:
+        - name: "email"
+          in: "query"
+          description: "사용자의 이메일"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "정보 조회 성공"
+        400:
+          description: "잘못된 요청"
+        404:
+          description: "사용자 정보 없음"
+    patch:
+      tags:
+        - "auth"
+      summary: "개인정보 수정"
+      description: "사용자의 정보를 수정합니다. (이메일 제외)"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "수정할 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+              address:
+                type: "string"
+              addressDetail:
+                type: "string"
+      responses:
+        200:
+          description: "정보 수정 성공"
+        400:
+          description: "잘못된 요청"
+        500:
+          description: "서버 오류"
+
+  /auth/withdraw:
+    post:
+      tags:
+        - "auth"
+      summary: "개인정보 삭제"
+      description: "사용자의 계정을 삭제합니다."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "탈퇴할 사용자의 이메일"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+      responses:
+        200:
+          description: "회원 탈퇴 성공"
+        400:
+          description: "잘못된 요청"
+
+  /auth/send-confirmation-email:
+    post:
+      tags:
+        - "auth"
+      summary: "이메일 인증 요청"
+      description: "사용자에게 이메일 인증을 요청합니다."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "이메일 인증을 요청할 이메일 주소"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+      responses:
+        200:
+          description: "인증 이메일 발송 성공"
+        400:
+          description: "잘못된 요청"
+
+  /auth/confirm-email:
+    post:
+      tags:
+        - "auth"
+      summary: "이메일 인증 완료"
+      description: "이메일 인증 번호를 확인하여 인증을 완료합니다."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "인증 번호 및 이메일"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              inputNumber:
+                type: "string"
+              email:
+                type: "string"
+      responses:
+        200:
+          description: "이메일 인증 완료"
+        400:
+          description: "잘못된 요청"
+
+  /auth/change-password:
+    post:
+      tags:
+        - "auth"
+      summary: "비밀번호 변경"
+      description: "사용자의 비밀번호를 변경합니다."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "비밀번호 변경 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              newPassword:
+                type: "string"
+              newPasswordConfirm:
+                type: "string"
+      responses:
+        200:
+          description: "비밀번호 변경 성공"
+        400:
+          description: "잘못된 요청"
+  /admin/orders:
+    get:
+      tags:
+        - "admin"
+      summary: "관리자 주문 조회"
+      description: "모든 주문을 조회합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "주문 조회 성공"
+        401:
+          description: "인증 실패"
+    post:
+      tags:
+        - "admin"
+      summary: "관리자 주문 추가"
+      description: "새로운 주문을 추가합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "주문 추가 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+              customerId:
+                type: "string"
+              product:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "string"
+                    name:
+                      type: "string"
+                    count:
+                      type: "integer"
+                    image:
+                      type: "string"
+                    options:
+                      type: "string"
+              memo:
+                type: "string"
+              payment:
+                type: "object"
                 properties:
-                  data:
-                    $ref: '#/components/schemas/Comment'
-                  error:
-                    type: string
-                    nullable: true
-        '400':
-          description: postId, content, author중 하나라도 없는 경우
-  /posts/{postId}/comments/{commentId}:
+                  ttlPriceItem:
+                    type: "integer"
+                  ttlPriceDelivery:
+                    type: "integer"
+                  ttlPrice:
+                    type: "integer"
+      responses:
+        200:
+          description: "주문 추가 성공"
+        400:
+          description: "잘못된 요청"
+
+  /admin/orders/{id}:
     put:
       tags:
-        - post
-      summary: 특정 게시글에 달린 하나의 댓글 수정
-      description: 특정 게시글에 달린 하나의 댓글을 수정(ID로)
-      operationId: updatePostComment
+        - "admin"
+      summary: "관리자 주문 수정"
+      description: "특정 주문을 수정합니다."
       parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "주문 ID"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "수정할 주문 정보"
           required: true
           schema:
-            type: string
-        - name: commentId
-          in: path
-          description: 댓글 ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Comment'
-        required: true
-      responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
+            type: "object"
+            properties:
+              status:
+                type: "string"
+              customerId:
+                type: "string"
+              product:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "string"
+                    name:
+                      type: "string"
+                    count:
+                      type: "integer"
+                    image:
+                      type: "string"
+                    options:
+                      type: "string"
+              memo:
+                type: "string"
+              payment:
+                type: "object"
                 properties:
-                  data:
-                    $ref: '#/components/schemas/Comment'
-                  error:
-                    type: string
-                    nullable: true
-        '400':
-          description: content가 없는 경우
-        '404':
-          description: 해당 게시글이나 댓글이 존재하지 않는 경우
+                  ttlPriceItem:
+                    type: "integer"
+                  ttlPriceDelivery:
+                    type: "integer"
+                  ttlPrice:
+                    type: "integer"
+      responses:
+        200:
+          description: "주문 수정 성공"
+        400:
+          description: "잘못된 요청"
+        404:
+          description: "주문을 찾을 수 없음"
     delete:
       tags:
-        - post
-      summary: 게시글 삭제
-      description: 게시글 ID로 게시글 삭제
-      operationId: deletePostComment
+        - "admin"
+      summary: "관리자 주문 삭제"
+      description: "특정 주문을 삭제합니다."
       parameters:
-        - name: postId
-          in: path
-          description: 게시글 ID
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
           required: true
-          schema:
-            type: string
-        - name: commentId
-          in: path
-          description: 댓글 ID
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "주문 ID"
           required: true
-          schema:
-            type: string
+          type: "string"
       responses:
-        '200':
-          description: 성공
-          content:
-            application/json:
-              schema:
-                type: object
+        200:
+          description: "주문 삭제 성공"
+        404:
+          description: "주문을 찾을 수 없음"
+
+  /admin/categories:
+    post:
+      tags:
+        - "admin"
+      summary: "관리자 카테고리 추가"
+      description: "새로운 카테고리를 추가합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "카테고리 추가 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+      responses:
+        200:
+          description: "카테고리 추가 성공"
+        400:
+          description: "잘못된 요청"
+
+  /admin/categories/{id}:
+    put:
+      tags:
+        - "admin"
+      summary: "관리자 카테고리 수정"
+      description: "특정 카테고리를 수정합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "카테고리 ID"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "수정할 카테고리 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+      responses:
+        200:
+          description: "카테고리 수정 성공"
+        400:
+          description: "잘못된 요청"
+        404:
+          description: "카테고리를 찾을 수 없음"
+
+    delete:
+      tags:
+        - "admin"
+      summary: "관리자 카테고리 삭제"
+      description: "특정 카테고리를 삭제합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "카테고리 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "카테고리 삭제 성공"
+        404:
+          description: "카테고리를 찾을 수 없음"
+    
+  /admin/products:
+    post:
+      tags:
+        - "admin"
+      summary: "관리자 상품 추가"
+      description: "새로운 상품을 추가합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "상품 추가 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              categoryId:
+                type: "string"
+              name:
+                type: "string"
+              brand:
+                type: "string"
+              price:
+                type: "integer"
+              image:
+                type: "string"
+              options:
+                type: "object"
                 properties:
-                  data:
-                    $ref: '#/components/schemas/Comment'
-                  error:
-                    type: string
-                    nullable: true
-        '404':
-          description: 해당 게시글이나 댓글이 존재하지 않는 경우
-components:
-  schemas:
-    Post:
-      type: object
-      required:
-        - title
-        - content
-        - author
-      properties:
-        title:
-          type: string
-          example: 게시글 제목
-        content:
-          type: string
-          example: 게시글 내용입니다
-        author:
-          type: string
-          example: 게시글 작성자명입니다
-    Comment:
-      type: object
-      required:
-        - postId
-        - content
-        - author
-      properties:
-        postId:
-          type: string
-          example: 65084f52e037726473873f88
-        content:
-          type: string
-          example: 댓글 내용입니다
-        author:
-          type: string
-          example: 댓글 작성자명입니다
-    FullPost:
-      type: object
-      required:
-        - title
-        - content
-        - author
-        - comments
-      properties:
-        title:
-          type: string
-          example: 게시글 제목
-        content:
-          type: string
-          example: 게시글 내용입니다
-        author:
-          type: string
-          example: 게시글 작성자명입니다
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
+                  name:
+                    type: "string"
+                  value:
+                    type: "array"
+                    items:
+                      type: "string"
+              description:
+                type: "string"
+      responses:
+        200:
+          description: "상품 추가 성공"
+        400:
+          description: "잘못된 요청"
+    
+  /admin/products/{id}:
+    put:
+      tags:
+        - "admin"
+      summary: "관리자 상품 수정 (단일 상품)"
+      description: "특정 상품을 수정합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "수정할 상품 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              categoryId:
+                type: "string"
+              name:
+                type: "string"
+              brand:
+                type: "string"
+              price:
+                type: "integer"
+              image:
+                type: "string"
+              options:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                  value:
+                    type: "array"
+                    items:
+                      type: "string"
+              description:
+                type: "string"
+      responses:
+        200:
+          description: "상품 수정 성공"
+        400:
+          description: "잘못된 요청"
+        404:
+          description: "상품을 찾을 수 없음"
+    delete:
+      tags:
+        - "admin"
+      summary: "관리자 상품 삭제 (단일 상품)"
+      description: "특정 상품을 삭제합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "상품 삭제 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+
+  /admin/userInfo:
+    get:
+      tags:
+        - "admin"
+      summary: "관리자 전체 회원 조회"
+      description: "모든 회원 정보를 조회합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "회원 조회 성공"
+        401:
+          description: "인증 실패"
+
+  /categories/{id}:
+    get:
+      tags:
+        - "category"
+      summary: "카테고리 조회 (단일 상품)"
+      description: "특정 카테고리 정보를 조회합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "사용자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "path"
+          description: "카테고리 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "카테고리 조회 성공"
+        404:
+          description: "카테고리를 찾을 수 없음"
+
+  /categories:
+    get:
+      tags:
+        - "category"
+      summary: "카테고리 조회 (전체 상품)"
+      description: "모든 카테고리 정보를 조회합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "사용자 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "카테고리 조회 성공"
+        404:
+          description: "카테고리 정보를 찾을 수 없음"
+  
+    /products:
+    post:
+      tags:
+        - "product"
+      summary: "상품 추가"
+      description: "새로운 상품을 추가합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "관리자 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "상품 추가 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              categoryId:
+                type: "string"
+              name:
+                type: "string"
+              brand:
+                type: "string"
+              price:
+                type: "integer"
+              image:
+                type: "string"
+              options:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                  value:
+                    type: "array"
+                    items:
+                      type: "string"
+              description:
+                type: "string"
+      responses:
+        200:
+          description: "상품 추가 성공"
+        400:
+          description: "잘못된 요청"
+
+  /products/{id}:
+    get:
+      tags:
+        - "product"
+      summary: "상품 조회 (단일 상품)"
+      description: "특정 상품의 정보를 조회합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "상품 조회 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+
+    put:
+      tags:
+        - "product"
+      summary: "상품 수정 (단일 상품)"
+      description: "특정 상품을 수정합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "수정할 상품 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              categoryId:
+                type: "string"
+              name:
+                type: "string"
+              brand:
+                type: "string"
+              price:
+                type: "integer"
+              image:
+                type: "string"
+              options:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                  value:
+                    type: "array"
+                    items:
+                      type: "string"
+              description:
+                type: "string"
+      responses:
+        200:
+          description: "상품 수정 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+        400:
+          description: "잘못된 요청"
+
+    delete:
+      tags:
+        - "product"
+      summary: "상품 삭제 (단일 상품)"
+      description: "특정 상품을 삭제합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "상품 삭제 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+
+  /products:
+    get:
+      tags:
+        - "product"
+      summary: "상품 조회 (전체 상품)"
+      description: "특정 카테고리에 속한 모든 상품을 조회합니다."
+      parameters:
+        - name: "categoryId"
+          in: "query"
+          description: "카테고리 ID"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "상품 목록 조회 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+
+  /products/{id}/options:
+    get:
+      tags:
+        - "product"
+      summary: "상품 옵션 조회 (단일 상품)"
+      description: "특정 상품의 옵션을 조회합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "상품 ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "상품 옵션 조회 성공"
+        404:
+          description: "상품을 찾을 수 없음"
+
+  /orders:
+    post:
+      tags:
+        - "order"
+      summary: "주문 추가"
+      description: "새로운 주문을 추가합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "회원 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "주문 추가 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+              customerId:
+                type: "string"
+              product:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "string"
+                    name:
+                      type: "string"
+                    count:
+                      type: "integer"
+                    image:
+                      type: "string"
+                    options:
+                      type: "string"
+              memo:
+                type: "string"
+              payment:
+                type: "object"
+                properties:
+                  ttlPriceItem:
+                    type: "integer"
+                  ttlPriceDelivery:
+                    type: "integer"
+                  ttlPrice:
+                    type: "integer"
+      responses:
+        200:
+          description: "주문 추가 성공"
+        400:
+          description: "잘못된 요청"
+
+    get:
+      tags:
+        - "order"
+      summary: "주문 조회 (전체 주문)"
+      description: "전체 주문 목록을 조회합니다."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "회원 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "주문 목록 조회 성공"
+        404:
+          description: "주문을 찾을 수 없음"
+
+  /orders/{id}:
+    get:
+      tags:
+        - "order"
+      summary: "주문 조회 (단일 주문)"
+      description: "특정 주문을 조회합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "주문 ID"
+          required: true
+          type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "회원 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "주문 조회 성공"
+        404:
+          description: "주문을 찾을 수 없음"
+  
+    put:
+      tags:
+        - "order"
+      summary: "주문 수정 (단일 주문)"
+      description: "특정 주문의 정보를 수정합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "주문 ID"
+          required: true
+          type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "회원 인증 토큰"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "주문 수정 정보"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+              customerId:
+                type: "string"
+              product:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "string"
+                    name:
+                      type: "string"
+                    count:
+                      type: "integer"
+                    image:
+                      type: "string"
+                    options:
+                      type: "string"
+              memo:
+                type: "string"
+              payment:
+                type: "object"
+                properties:
+                  ttlPriceItem:
+                    type: "integer"
+                  ttlPriceDelivery:
+                    type: "integer"
+                  ttlPrice:
+                    type: "integer"
+      responses:
+        200:
+          description: "주문 수정 성공"
+        404:
+          description: "주문을 찾을 수 없음"
+  
+    delete:
+      tags:
+        - "order"
+      summary: "주문 삭제 (단일 주문)"
+      description: "특정 주문을 삭제합니다."
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "주문 ID"
+          required: true
+          type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "회원 인증 토큰"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "주문 삭제 성공"
+        404:
+          description: "주문을 찾을 수 없음"
