@@ -39,7 +39,10 @@ class UserDAO {
     return user;
   }
   // DB에서 ID에 해당하는 사용자 정보를 업데이트하는 메소드
-  async updateById(id, { email, address, addressDetail, password, role, profileImage }) {
+  async updateById(
+    id,
+    { email, address, addressDetail, password, role, profileImage },
+  ) {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
@@ -48,7 +51,7 @@ class UserDAO {
         address,
         addressDetail,
         role,
-        profileImage
+        profileImage,
       },
       {
         runValidators: true,

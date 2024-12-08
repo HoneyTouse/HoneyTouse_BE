@@ -6,12 +6,11 @@ const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const nodemailer = require('nodemailer');
 const config = require('../config');
-const withTransaction = require('../settings/transactionUtils');
 const formValidator = require('../settings/formValidator');
 const MulterConfig = require('../settings/multerConfig');
 const getProfileImageUrl = require('../settings/profileImageUtils');
-const path = require("path");
-
+const path = require('path');
+const TokenService = require('./tokenService');
 const multerConfig = new MulterConfig();
 
 class AuthService {
@@ -24,79 +23,72 @@ class AuthService {
     address,
     addressDetail,
   }) {
-    return withTransaction(async (session) => {
-      // 회원가입 폼 : 이름, 이메일, 전화번호, 비밀번호 유효성 검사
-      // 이름
-      if (!formValidator.isValidName(name)) {
-        throw new AppError(
-          commonErrors.inputError,
-          '이름 형식이 일치하지 않습니다.',
-          400,
-        );
-      }
-
-      // 연락처
-      if (!formValidator.isValidPhoneNumber(phoneNumber)) {
-        throw new AppError(
-          commonErrors.inputError,
-          '전화번호 형식이 일치하지 않습니다.',
-          400,
-        );
-      }
-
-      // 이메일
-      if (!formValidator.isValidEmail(email)) {
-        throw new AppError(
-          commonErrors.inputError,
-          '이메일 형식이 일치하지 않습니다.',
-          400,
-        );
-      }
-
-      // 비밀번호
-      if (!formValidator.isValidPassword(plainPassword)) {
-        throw new AppError(
-          commonErrors.inputError,
-          '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
-          400,
-        );
-      }
-
-      // 이메일 존재 여부 확인하는 메소드
-      const existingUser = await userDAO.findByEmail(email);
-      if (existingUser && existingUser.email !== null) {
-        throw new AppError(
-          commonErrors.inputError,
-          '이미 존재하는 이메일입니다.',
-          400,
-        );
-      }
-
-      // 회원가입 폼 유효성 검사 통과 & 이메일 중복이 아닌 경우
-      // ---> 회원가입을 진행
-
-      // 비밀번호를 해싱하여 해시화된 비밀번호 생성
-      const hashedPassword = await bcrypt.hash(plainPassword, 15);
-
-      // 회원이 입력한 비밀번호를 해시화된 비밀번호로 변경함.
-      // 변경한 내용으로 다시 회원을 생성함.
-      const newUser = await userDAO.create(
-        {
-          name,
-          phoneNumber,
-          email,
-          password: hashedPassword,
-          address,
-          addressDetail,
-          role: 'user', // 기본적으로 일반회원은 'user', 관리자 계정은 DB에서 생성
-        },
-        {
-          session,
-        },
+    // 회원가입 폼 : 이름, 이메일, 전화번호, 비밀번호 유효성 검사
+    // 이름
+    if (!formValidator.isValidName(name)) {
+      throw new AppError(
+        commonErrors.inputError,
+        '이름 형식이 일치하지 않습니다.',
+        400,
       );
+    }
 
-      return newUser;
+    // 연락처
+    if (!formValidator.isValidPhoneNumber(phoneNumber)) {
+      throw new AppError(
+        commonErrors.inputError,
+        '전화번호 형식이 일치하지 않습니다.',
+        400,
+      );
+    }
+
+    // 이메일
+    if (!formValidator.isValidEmail(email)) {
+      throw new AppError(
+        commonErrors.inputError,
+        '이메일 형식이 일치하지 않습니다.',
+        400,
+      );
+    }
+
+    // 비밀번호
+    if (!formValidator.isValidPassword(plainPassword)) {
+      throw new AppError(
+        commonErrors.inputError,
+        '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
+        400,
+      );
+    }
+
+    // 이메일 존재 여부 확인하는 메소드
+    const existingUser = await userDAO.findByEmail(email);
+    if (existingUser && existingUser.email !== null) {
+      throw new AppError(
+        commonErrors.conflictError,
+        '이미 존재하는 이메일입니다.',
+        409,
+      );
+    }
+
+    // 회원가입 폼 유효성 검사 통과 & 이메일 중복이 아닌 경우
+    // ---> 회원가입을 진행
+
+    // 비밀번호를 해싱하여 해시화된 비밀번호 생성
+    const hashedPassword = await bcrypt.hash(plainPassword, 15);
+
+    // 회원이 입력한 비밀번호를 해시화된 비밀번호로 변경함.
+    // 변경한 내용으로 다시 회원을 생성함.
+    const newUser = await userDAO.create({
+      name,
+      phoneNumber,
+      email,
+      password: hashedPassword,
+      address,
+      addressDetail,
+      role: 'user', // 기본적으로 일반회원은 'user', 관리자 계정은 DB에서 생성
     });
+
+    return newUser;
   }
 
   // 로그인 메소드
@@ -110,7 +102,7 @@ class AuthService {
         throw new AppError(
           commonErrors.resourceNotFoundError,
           '해당 이메일로 가입한 회원이 없습니다.',
-          400,
+          404,
         );
       }
 
@@ -121,10 +113,6 @@ class AuthService {
         user.password,
       );
 
-      console.log(
-        '사용자가 입력한 번호와 DB에 저장된 번호의 일치 여부',
-        isPasswordValid,
-      );
       if (!isPasswordValid) {
         throw new AppError(
           commonErrors.resourceNotFoundError,
@@ -133,9 +121,10 @@ class AuthService {
         );
       }
 
-      const newToken = this.generateToken(user);
+      const accessToken = TokenService.generateAccessToken(user);
+      const refreshToken = TokenService.generateRefreshToken(user);
 
-      return newToken;
+      return { accessToken, refreshToken };
     } catch (error) {
       console.error('로그인 에러:', error.message);
       throw new AppError(
@@ -146,72 +135,50 @@ class AuthService {
     }
   }
 
-  // 토큰 생성 메소드 (아이디, 이메일, 역할)
-  async generateToken(user) {
-    // MongoDB에서 자동 생성되는 id를 자바스크립트로 변환
-    const id = user._id.toString();
-
-    // 로그인 성공 후 jwt 토큰 생성
-    const tokenPayload = {
-      id,
-      email: user.email,
-      role: user.role,
-    };
-
-    // Access Token 발급하기
-    const accessToken = jwt.sign(tokenPayload, config.jwtSecret, {
-      expiresIn: '6h', // 6시간
-    });
-
-    return { token: accessToken };
-  }
-
   // 개인정보 수정 메소드
   async updateProfile({ email, address, addressDetail, password }) {
-    return withTransaction(async (session) => {
-      const user = await userDAO.findByEmail(email);
+    const user = await userDAO.findByEmail(email);
 
-      if (!user) {
+    if (!user) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 이메일로 가입한 회원이 없습니다.',
+        404,
+      );
+    }
+
+    // 이메일 변경시 에러 뜨게 함 (이메일 변경 불가능)
+    if (email !== user.email) {
+      throw new AppError(
+        commonErrors.businessError,
+        '이메일은 수정할 수 없습니다.',
+        400,
+      );
+    }
+
+    const updatedUser = {
+      name: user.name,
+      phoneNumber: user.phoneNumber,
+      email,
+      address,
+      addressDetail,
+      role: 'user',
+    };
+
+    // 새로운 비밀번호를 등록한 경우에만 비밀번호 업데이트
+    if (password) {
+      if (!formValidator.isValidPassword(password)) {
         throw new AppError(
-          commonErrors.resourceNotFoundError,
-          '해당 이메일로 가입한 회원이 없습니다.',
+          commonErrors.inputError,
+          '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
           400,
         );
       }
-
-      // 이메일 변경시 에러 뜨게 함 (이메일 변경 불가능)
-      if (email !== user.email) {
-        throw new AppError(
-          commonErrors.resourceNotFoundError,
-          '이메일은 수정할 수 없습니다.',
-          400,
-        );
-      }
-
-      const updatedUser = {
-        name: user.name,
-        phoneNumber: user.phoneNumber,
-        email,
-        address,
-        addressDetail,
-        role: 'user',
-      };
-
-      // 새로운 비밀번호를 등록한 경우에만 비밀번호 업데이트
-      if (password) {
-        if (!formValidator.isValidPassword(password)) {
-          throw new AppError(
-            commonErrors.inputError,
-            '비밀번호 형식(8~16자의 영문, 숫자, 특수문자)이 일치하지 않습니다.',
-            400,
-          );
-        }
-        const hashedPassword = await bcrypt.hash(password, 15);
-        updatedUser.password = hashedPassword;
-      }
-      await userDAO.updateById(user._id, updatedUser, { session });
-      return updatedUser;
-    });
+      const hashedPassword = await bcrypt.hash(password, 15);
+      updatedUser.password = hashedPassword;
+    }
+    await userDAO.updateById(user._id, updatedUser);
+    return updatedUser;
   }
 
   // 모든 회원 정보 조회 메소드 (관리자)
@@ -221,8 +188,8 @@ class AuthService {
       if (!AllUserInfo) {
         throw new AppError(
           commonErrors.resourceNotFoundError,
-          '정보할 회원 정보가 없습니다.',
-          400,
+          '요청한 회원 정보가 없습니다.',
+          404,
         );
       }
       return AllUserInfo;
@@ -236,20 +203,20 @@ class AuthService {
   }
 
   // 개인정보 조회 메소드
-  async getProfile(email) {
+  async getProfile(id) {
     try {
-      const user = await userDAO.findByEmail(email);
+      const user = await userDAO.findById(id);
+
       if (!user) {
         throw new AppError(
           commonErrors.resourceNotFoundError,
-          '해당 이메일로 가입한 회원이 없습니다.',
-          400,
+          '해당 아이디에 해당하는 회원이 없습니다.',
+          404,
         );
       }
 
       const checkedUrl = await getProfileImageUrl(user.profileImage);
 
-      // 사용자 정보 반환 가능
       return {
         name: user.name,
         phoneNumber: user.phoneNumber ?? null,
@@ -273,20 +240,18 @@ class AuthService {
   }
 
   // 개인정보 삭제 (회원탈퇴) 메소드
-  async deleteProfile(email) {
-    return withTransaction(async (session) => {
-      const user = await userDAO.findByEmail(email);
+  async deleteProfile(id) {
+    const user = await userDAO.findById(id);
 
-      if (!user) {
-        throw new AppError(
-          commonErrors.resourceNotFoundError,
-          '해당 이메일로 가입한 회원이 없습니다.',
-          400,
-        );
-      }
-      await userDAO.deleteByEmail(email, { session });
-      return user;
-    });
+    if (!user) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 이메일로 가입한 회원이 없습니다.',
+        404,
+      );
+    }
+    await userDAO.deleteByEmail(id, { session });
+    return user;
   }
 
   // 이메일 인증 발송 메소드
@@ -336,7 +301,7 @@ class AuthService {
       const user = await EmailVerification.findOne({ email });
 
       // 해당 회원의  verificationCode 랑 inputNumber 비교
-      const verificationCode = await user.verificationCode;
+      const verificationCode = user.verificationCode;
 
       // 입력한 번호와 저장된 인증 코드를 비교하여 일치하는지 확인
       if (inputNumber === verificationCode) {
@@ -409,7 +374,7 @@ class AuthService {
               throw new AppError(
                 commonErrors.resourceNotFoundError,
                 '해당 이메일로 가입한 회원이 없습니다.',
-                400,
+                404,
               );
             }
 
@@ -419,7 +384,10 @@ class AuthService {
 
             const normalizedPath = path.normalize(imageUrl);
 
-            user.profileImage = normalizedPath.replace(path.join('src', 'public') + path.sep, '');
+            user.profileImage = normalizedPath.replace(
+              path.join('src', 'public') + path.sep,
+              '',
+            );
 
             const newProfileImage = user.profileImage;
 
@@ -438,6 +406,13 @@ class AuthService {
         }
       });
     });
+  }
+
+  // 액세스토큰 업데이트
+  async refreshAccessToken(req) {
+    const id = req.userId;
+    const newAccessToken = TokenService.generateAccessToken({ id });
+    return { accessToken: newAccessToken };
   }
 }
 

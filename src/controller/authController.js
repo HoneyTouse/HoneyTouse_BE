@@ -1,7 +1,10 @@
-const { authService, googleOAuthService } = require('../service');
+const { authService } = require('../service');
 const utils = require('../misc/utils');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const { refreshCookieOptions } = require('../settings/cookieOptions');
+const AppError = require('../misc/AppError');
+const commonErrors = require('../misc/commonErrors');
 
 const authController = {
   // 회원가입 컨트롤러
@@ -30,12 +33,14 @@ const authController = {
   async postSignIn(req, res, next) {
     try {
       const { email, password } = req.body;
-      const token = await authService.signIn({
+      const { accessToken, refreshToken } = await authService.signIn({
         email,
         plainPassword: password,
       });
 
-      res.status(201).json(utils.buildResponse(token));
+      res.cookie('refreshToken', refreshToken, refreshCookieOptions);
+
+      res.status(201).json(utils.buildResponse({ accessToken }));
     } catch (error) {
       next(error);
     }
@@ -72,16 +77,27 @@ const authController = {
   // 개인정보 조회 컨트롤러
   async getProfile(req, res, next) {
     try {
-      const token = req.headers.authorization.split(' ')[1];
+      const id = req.userId;
 
-      // 해당 token이 정상적인 token인지 확인
-      const secretKey = config.jwtSecret || 'secretkey';
-      const jwtDecoded = jwt.verify(token, secretKey);
+      if (!id) {
+        // 사용자가 인증되지 않았다면 401 Unauthorized 에러 반환
+        return next(
+          new AppError(
+            commonErrors.authenticationError,
+            '인증되지 않은 사용자입니다.',
+            401,
+          ),
+        );
+      }
+      // const token = req.headers.authorization.split(' ')[1];
 
-      // 토큰에서 이메일 추출
-      const { email } = jwtDecoded;
+      // // 해당 token이 정상적인 token인지 확인
+      // const secretKey = config.jwtSecret || 'secretkey';
+      // const jwtDecoded = jwt.verify(token, secretKey);
 
-      const userProfile = await authService.getProfile(email);
+      // // 토큰에서 ID 추출
+      // const { id } = jwtDecoded;
+      const userProfile = await authService.getProfile(id);
 
       res.status(200).json(utils.buildResponse(userProfile));
     } catch (error) {
@@ -99,10 +115,9 @@ const authController = {
       const secretKey = config.jwtSecret || 'secretkey';
       const jwtDecoded = jwt.verify(token, secretKey);
 
-      // 토큰에서 이메일 추출
-      const { email } = jwtDecoded;
-
-      const data = await authService.deleteProfile(email);
+      // 토큰에서 ID 추출
+      const { id } = jwtDecoded;
+      const data = await authService.deleteProfile(id);
 
       res.status(200).json(utils.buildResponse(data));
     } catch (error) {
@@ -169,6 +184,18 @@ const authController = {
       }
     } catch (error) {
       console.error('Error uploading profile image:', error.message);
+      next(error);
+    }
+  },
+
+  // 액세스토큰 업데이트 컨트롤러
+  async postRefreshAccessToken(req, res, next) {
+    try {
+      const result = await authService.refreshAccessToken(req);
+
+      res.status(200).json(utils.buildResponse(result));
+    } catch (error) {
+      console.error('Error While Updating Access Token:', error.message);
       next(error);
     }
   },

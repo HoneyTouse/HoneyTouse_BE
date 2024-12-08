@@ -1,12 +1,25 @@
 const config = require('../config');
 
-// 개발 환경에서 쿠키 옵션
-const cookieOptions = {
-  httpOnly: false, // 클라이언트에서 삭제하도록 함
+const commonOptions = {
   domain: config.CookieDomain,
   secure: config.CookieSecure,
   samesite: config.CookieSamesite,
-  maxAge: 1000 * 20, // 20초
+}
+
+// 구글 로그인 토큰 옵션
+const googleCookieOptions = {
+  httpOnly: false,
+  ...commonOptions,
+  maxAge: 1000 * 10, // 10초
 };
 
-module.exports = cookieOptions;
+// 리프레시 토큰 옵션
+const refreshCookieOptions = {
+  httpOnly: true,
+  ...commonOptions,
+  maxAge: 1000 * 60 * 60 * 6, // 6시간
+  // maxAge: 1000 * 30, // 30초 (개발 확인용)
+}
+
+exports.googleCookieOptions = googleCookieOptions;
+exports.refreshCookieOptions = refreshCookieOptions;

@@ -4,7 +4,7 @@ const { authService } = require('../service');
 const checkAuthentication = require('../middleware/loginMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
-const cookieOptions = require('../settings/cookieOptions');
+const { googleCookieOptions, refreshCookieOptions } = require('../settings/cookieOptions');
 
 const authRouter = express.Router();
 
@@ -35,7 +35,9 @@ authRouter.get(
       try {
         const token = await authService.generateToken(req.user);
 
-        res.cookie('token', token.token, cookieOptions);
+        res.cookie('token', token, googleCookieOptions);
+
+        res.cookie('refreshToken', refreshToken, refreshCookieOptions);
 
         res.redirect(`${ClientUrl}`);
       } catch (error) {
@@ -99,5 +101,13 @@ authRouter.post(
   checkAuthentication(),
   authController.postUploadProfileImage,
 );
+
+// POST /api/v1/auth/refresh-access-token
+// 액세스토큰 업데이트
+authRouter.post(
+  '/refresh-access-token',
+  checkAuthentication(),
+  authController.postRefreshAccessToken
+)
 
 module.exports = authRouter;

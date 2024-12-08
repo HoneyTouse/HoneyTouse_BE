@@ -42,8 +42,6 @@ module.exports = {
 
   googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL, // 구글로그인 콜백 URL
 
-  sesssionSecret: process.env.SESSION_SECRET, // 세션 비밀번호
-
   ClientUrl: process.env.CLIENT_URL, // 클라이언트 리다이렉션 주소
 
   CookieDomain: process.env.COOKIE_DOMAIN, // 쿠키 Domain
