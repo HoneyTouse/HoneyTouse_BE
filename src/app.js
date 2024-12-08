@@ -92,7 +92,7 @@ async function create() {
     logger.error(
       {
         message: error.message,
-        stack: error.stack,
+        stack: error.stack || 'No stack trace available', 
         url: req.originalUrl,
         method: req.method,
         headers: req.headers,
