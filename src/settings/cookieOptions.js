@@ -17,8 +17,8 @@ const googleCookieOptions = {
 const refreshCookieOptions = {
   httpOnly: true,
   ...commonOptions,
-  // maxAge: 1000 * 60 * 60, // 1시간
-  maxAge: 1000 * 30, // 30초
+  maxAge: 1000 * 60 * 60 * 6, // 6시간
+  // maxAge: 1000 * 30, // 30초 (개발 확인용)
 }
 
 exports.googleCookieOptions = googleCookieOptions;
