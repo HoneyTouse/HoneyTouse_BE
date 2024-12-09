@@ -6,13 +6,13 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
 const passport = require('./passport/googleStrategy');
 const cookieParser = require('cookie-parser');
-
 const loader = require('./loader');
 const config = require('./config');
 const AppError = require('./misc/AppError');
 const commonErrors = require('./misc/commonErrors');
 const apiRouter = require('./router');
 const cors = require('cors');
+const corsOptions = require('./settings/corsOptions');
 const pino = require('pino');
 const pinoHttp = require('pino-http');
 
@@ -31,17 +31,6 @@ async function create() {
       },
     },
   });
-
-  const corsOptions = {
-    origin: [
-      'https://www.honeytouse.com',
-      'https://honeytouse.com',
-      'http://localhost:8080',
-      'http://127.0.0.1:8080',
-    ],
-    // allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  };
 
   const expressApp = express();
   expressApp.use(express.json());
@@ -92,7 +81,7 @@ async function create() {
     logger.error(
       {
         message: error.message,
-        stack: error.stack || 'No stack trace available', 
+        stack: error.stack || 'No stack trace available',
         url: req.originalUrl,
         method: req.method,
         headers: req.headers,
