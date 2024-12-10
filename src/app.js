@@ -13,7 +13,7 @@ const AppError = require('./misc/AppError');
 const commonErrors = require('./misc/commonErrors');
 const apiRouter = require('./router');
 const cors = require('cors');
-const corsOptions = require('./settings/corsOptions');
+const allowedOrigins = require('./settings/corsOptions');
 const logger = require('./settings/logger');
 const pinoHttp = require('pino-http');
 
@@ -23,10 +23,22 @@ async function create() {
   await loader.load();
 
   logger.info('express application을 초기화합니다.');
-
   const expressApp = express();
+  expressApp.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+          callback(null, true);
+        } else {
+          callback(new Error('Request Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    }),
+  );
   expressApp.use(express.json());
-  expressApp.use(cors(corsOptions));
   expressApp.use(cookieParser());
 
   // Passport 초기화 및 세션 설정
@@ -107,7 +119,7 @@ async function create() {
       });
     },
 
-    // 서버 어플리케이션을 중지하기 위한 메소드
+    // 서버 종료 전에 요청을 받지 않도록 하고, MongoDB 연결을 안전하게 종료하는 메소드
     async stop() {
       logger.info('🔥 서버를 중지 작업을 시작합니다.');
       this.isShuttingDown = true;

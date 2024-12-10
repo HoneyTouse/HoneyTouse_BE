@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
-    "start:dev": "cross-env node_env=development LANG=ko_KR.UTF-8 LC_ALL=ko_KR.UTF-8 nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
+    "start:dev": "cross-env node_env=development nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint bin src",
     "format": "prettier --write .",

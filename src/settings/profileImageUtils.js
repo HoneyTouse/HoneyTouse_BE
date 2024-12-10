@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
+const logger = require('../settings/logger');
 
 async function getProfileImageUrl(profileImageUrl) {
   if (!profileImageUrl) return ''; // 없으면 빈 문자열
