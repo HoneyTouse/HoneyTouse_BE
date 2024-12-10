@@ -49,7 +49,7 @@ const categoryController = {
     try {
       const { id } = req.params;
       await categoryService.deleteCategory(id);
-      res.status(204).send(); // 204 상태 코드 반환
+      res.status(204).send(); 
     } catch (error) {
       next(error);
     }

@@ -90,19 +90,11 @@ const authController = {
           ),
         );
       }
-      // const token = req.headers.authorization.split(' ')[1];
-
-      // // 해당 token이 정상적인 token인지 확인
-      // const secretKey = config.jwtSecret || 'secretkey';
-      // const jwtDecoded = jwt.verify(token, secretKey);
-
-      // // 토큰에서 ID 추출
-      // const { id } = jwtDecoded;
       const userProfile = await authService.getProfile(id);
 
       res.status(200).json(utils.buildResponse(userProfile));
     } catch (error) {
-      logger.error('컨트롤러 에러', error.message);
+      logger.error('Error while get user profile:', error.message);
       next(error);
     }
   },
@@ -196,7 +188,7 @@ const authController = {
 
       res.status(200).json(utils.buildResponse(result));
     } catch (error) {
-      logger.error('Error While Updating Access Token:', error.message);
+      logger.error('Error while updating access token:', error.message);
       next(error);
     }
   },
