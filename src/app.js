@@ -13,7 +13,6 @@ const AppError = require('./misc/AppError');
 const commonErrors = require('./misc/commonErrors');
 const apiRouter = require('./router');
 const cors = require('cors');
-const allowedOrigins = require('./settings/corsOptions');
 const logger = require('./settings/logger');
 const pinoHttp = require('pino-http');
 
@@ -27,6 +26,14 @@ async function create() {
   expressApp.use(
     cors({
       origin: function (origin, callback) {
+        const allowedOrigins = [
+          'https://www.honeytouse.com',
+          'https://honeytouse.com',
+          'https://api.honeytouse.com',
+          'http://localhost:8080',
+          'http://127.0.0.1:8080',
+          'http://localhost:3000',
+        ];
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
           callback(null, true);
         } else {
