@@ -13,7 +13,7 @@ async function getProfileImageUrl(profileImageUrl) {
     return profileImageUrl;
   } catch (error) {
     // 그렇지 않으면 빈 문자열 반환
-    console.error(`Error accessing profile image`, error);
+    logger.error(`Error accessing profile image`, error);
     return '';
   }
 }

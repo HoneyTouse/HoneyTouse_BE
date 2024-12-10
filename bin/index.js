@@ -1,4 +1,5 @@
 const createApp = require('../src/app');
+const logger = require('../src/settings/logger');
 
 async function main() {
   // 서버 어플리케이션 객체를 생성
@@ -7,7 +8,7 @@ async function main() {
   // 처리하지 못한 에러를 캐치하는 리스너 + 핸들러
   // 이 이벤트 리스너는 매우 중요하다. 개발자가 실수로 놓친 에러를 잡아준다.
   process.on('uncaughtException', (error) => {
-    console.log(`uncaughtException: ${error}`);
+    logger.error(`uncaughtException: ${error}`);
   });
 
   // OS의 kill signal에 반응하도록 설정
@@ -17,12 +18,12 @@ async function main() {
     // 이를 graceful shutdown(한국어로 "정상적인 셧다운"?이라고 한다)
     process.on(signal, async () => {
       if (!app.isShuttingDown) {
-        console.log(
+        logger.info(
           `시스템 시그널, ${signal}을 수신하였습니다. 의도된 서버 중지 신호입니다. Graceful shutdown을 실시합니다.`,
         );
         await app.stop();
-        console.log(`Graceful shutdown이 완료되었습니다.`);
-        console.log(`바이바이 👋`);
+        logger.info(`Graceful shutdown이 완료되었습니다.`);
+        logger.info(`바이바이 👋`);
         process.exit(0);
       }
     });

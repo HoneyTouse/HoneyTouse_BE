@@ -5,6 +5,7 @@ const config = require('../config');
 const { refreshCookieOptions } = require('../settings/cookieOptions');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
+const logger = require('../settings/logger');
 
 const authController = {
   // 회원가입 컨트롤러
@@ -101,7 +102,7 @@ const authController = {
 
       res.status(200).json(utils.buildResponse(userProfile));
     } catch (error) {
-      console.error('컨트롤러 에러', error.message);
+      logger.error('컨트롤러 에러', error.message);
       next(error);
     }
   },
@@ -183,7 +184,7 @@ const authController = {
         res.status(400).json({ success: false, message: result.message });
       }
     } catch (error) {
-      console.error('Error uploading profile image:', error.message);
+      logger.error('Error uploading profile image:', error.message);
       next(error);
     }
   },
@@ -195,7 +196,7 @@ const authController = {
 
       res.status(200).json(utils.buildResponse(result));
     } catch (error) {
-      console.error('Error While Updating Access Token:', error.message);
+      logger.error('Error While Updating Access Token:', error.message);
       next(error);
     }
   },

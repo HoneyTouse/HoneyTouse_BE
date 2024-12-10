@@ -18,7 +18,7 @@ async function withTransaction(fn) {
     const enhancedError = new Error(`Transaction failed: ${error.message}`);
     enhancedError.originalError = error;
     enhancedError.stack = error.stack;
-    console.error('Transaction error:', enhancedError);
+    logger.error('Transaction error:', enhancedError);
     throw enhancedError;
   } finally {
     // 세션 종료
