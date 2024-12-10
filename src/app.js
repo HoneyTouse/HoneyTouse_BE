@@ -1,3 +1,4 @@
+require('./settings/setConsoleCodePage');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -13,7 +14,7 @@ const commonErrors = require('./misc/commonErrors');
 const apiRouter = require('./router');
 const cors = require('cors');
 const corsOptions = require('./settings/corsOptions');
-const pino = require('pino');
+const logger = require('./settings/logger');
 const pinoHttp = require('pino-http');
 
 // express application을 "생성"해주는 함수
@@ -21,16 +22,7 @@ async function create() {
   // MongoDB에 연결
   await loader.load();
 
-  console.log('express application을 초기화합니다.');
-  const logger = pino({
-    level: 'info',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-      },
-    },
-  });
+  logger.info('express application을 초기화합니다.');
 
   const expressApp = express();
   expressApp.use(express.json());
@@ -96,7 +88,7 @@ async function create() {
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     });
   });
-  console.log('express application 준비가 완료되었습니다.');
+  logger.info('express application 준비가 완료되었습니다.');
 
   // express와 http.Server을 분리해서 관리하기 위함.
   const server = http.createServer(expressApp);
@@ -106,19 +98,16 @@ async function create() {
     start() {
       server.listen(config.port);
       server.on('listening', () => {
-        console.log(
+        logger.info(
           `🚀${config.applicationName}가 포트 ${config.port}에서 운영중입니다.`,
         );
-        console.log(
+        logger.info(
           `📜${config.applicationName}의 REST API 문서는 /api-docs에서 확인 가능합니다.`,
         );
       });
     },
+
     // 서버 어플리케이션을 중지하기 위한 메소드
-    // 이 함수는 어플리케이션이 죽기 전(예를 들어 개발자가 ctrl+c를 누른 직후)에 실행될 예정이다.
-    // 죽기 전에 실행됨으로서:
-    // 1) 서버가 더 이상 외부로부터 요청을 받지 않도록 하고(죽는 도중에 요청을 받으면 해당 요청은 응답을 못 받을 가능성이 매우 높기 때문에 애초에 서버가 죽기 전에는 받지 않도록 해주는 것이 좋다)
-    // 2) mongoDB와의 연결을 안전하게 끊는다.
     async stop() {
       logger.info('🔥 서버를 중지 작업을 시작합니다.');
       this.isShuttingDown = true;

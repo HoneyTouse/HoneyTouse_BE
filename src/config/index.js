@@ -1,13 +1,16 @@
 const dotenv = require('dotenv');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
+const logger = require('../settings/logger');
 
 process.env.NODE_ENV = process.env.NODE_ENV ?? 'development';
-console.log(
+logger.info(
   `어플리케이션 서버를 다음 환경으로 시작합니다: ${process.env.NODE_ENV}`,
 );
 
-const envFound = dotenv.config(); // dotenv를 사용하여 환경 변수도 읽어온다.
+// dotenv를 사용하여 환경 변수 불러오기
+const envFound = dotenv.config();
+
 // .env 파일이 없으면 에러를 던진다
 if (envFound.error) {
   throw new AppError(commonErrors.configError, "Couldn't find .env file");
