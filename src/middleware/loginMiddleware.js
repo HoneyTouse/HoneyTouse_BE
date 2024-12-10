@@ -5,6 +5,7 @@ const handleTokenError = require('./utils/tokenHandling');
 const extractToken = require('./utils/extractToken');
 const config = require('../config');
 const { userDAO } = require('../data-access');
+const logger = require('../settings/logger');
 
 // 관리자 여부를 확인해야 할 때는 requireAdmin을 true로 설정
 const checkAuthentication =
@@ -74,7 +75,7 @@ const checkAuthentication =
             jwt.verify(refreshToken, secretKey);
             return next();
           } catch (refreshErr) {
-            console.error('리프레시 토큰 검증 실패', refreshErr);
+            logger.error('리프레시 토큰 검증 실패', refreshErr);
             return next(
               new AppError(
                 commonErrors.authenticationError,
@@ -89,7 +90,7 @@ const checkAuthentication =
         return handleTokenError(err, next);
       }
     } catch (error) {
-      console.error('토큰 처리 중 오류:', error.message);
+      logger.error('토큰 처리 중 오류:', error.message);
       return next(
         new AppError(
           commonErrors.authenticationError,

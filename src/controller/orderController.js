@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 
 const orderController = {
+  // 주문 생성
   async postOrder(req, res, next) {
     try {
       const { status, product, memo, payment } = req.body;
@@ -11,13 +12,7 @@ const orderController = {
 
       // 토큰에서 유저 ID를 확인하여 customerId 할당
       if (req.headers.authorization) {
-        // 토큰 추출
-        const token = req.headers.authorization.split(' ')[1];
-        // 해당 token이 정상적인 token인지 확인
-        const secretKey = config.jwtSecret || 'secretkey';
-        const jwtDecoded = jwt.verify(token, secretKey);
-        const { id } = jwtDecoded;
-        customerId = id;
+        customerId = req.userId;
       } else {
         // 비회원의 경우 customerId를 랜덤 생성
         const date = new Date();
@@ -40,6 +35,7 @@ const orderController = {
     }
   },
 
+  // 특정 주문 조회
   async getOrder(req, res, next) {
     try {
       const { id } = req.params;
@@ -49,6 +45,7 @@ const orderController = {
       next(error);
     }
   },
+
   // 특정 구매자 id로 주문 조회
   async getOrders(req, res, next) {
     try {
@@ -60,6 +57,7 @@ const orderController = {
       next(error);
     }
   },
+
   // 관리자 모든 주문 조회
   async getAllOrders(req, res, next) {
     try {
@@ -70,6 +68,7 @@ const orderController = {
     }
   },
 
+  // 주문 단계별 조회
   async getOrdersByStatus(req, res, next) {
     try {
       const { status } = req.query;
@@ -84,6 +83,7 @@ const orderController = {
     }
   },
 
+  // 주문 수정
   async putOrder(req, res, next) {
     try {
       const { id } = req.params;
@@ -101,6 +101,7 @@ const orderController = {
     }
   },
 
+  // 주문 삭제
   async deleteOrder(req, res, next) {
     try {
       const { id } = req.params;

@@ -12,6 +12,7 @@ const getProfileImageUrl = require('../settings/profileImageUtils');
 const path = require('path');
 const TokenService = require('./tokenService');
 const multerConfig = new MulterConfig();
+const logger = require('../settings/logger');
 
 class AuthService {
   // 회원가입 메소드
@@ -126,7 +127,7 @@ class AuthService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      console.error('로그인 에러:', error.message);
+      logger.error('로그인 에러:', error.message);
       throw new AppError(
         commonErrors.authenticationError,
         '인증이 실패하거나 토큰을 생성할 수 없습니다.',
@@ -227,7 +228,7 @@ class AuthService {
         profileImage: checkedUrl ?? null,
       };
     } catch (error) {
-      console.error({
+      logger.error({
         message: error.message,
         stack: error.stack,
       });
@@ -286,7 +287,7 @@ class AuthService {
 
     // 인증 코드 이메일 발송
     await transporter.sendMail(mailOptions);
-    console.log('인증 코드 이메일이 성공적으로 전송되었습니다.');
+    logger.info('인증 코드 이메일이 성공적으로 전송되었습니다.');
 
     // DB의 EmailVerification모델에 해당 내역을 저장
     await EmailVerification.create({ email: toemail, verificationCode });
@@ -352,7 +353,7 @@ class AuthService {
               message: 'File size limit exceeded.',
             });
           } else {
-            console.error('Error uploading profile image:', err);
+            logger.error('Error uploading profile image:', err);
             reject({
               success: false,
               message: 'Failed to upload profile image.',
@@ -397,7 +398,7 @@ class AuthService {
 
             resolve({ success: true, imageUrl: newProfileImage });
           } catch (error) {
-            console.error('Error saving profile image URL:', error);
+            logger.error('Error saving profile image URL:', error);
             reject({
               success: false,
               message: 'Failed to save profile image URL.',

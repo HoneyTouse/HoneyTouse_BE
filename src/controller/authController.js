@@ -5,6 +5,7 @@ const config = require('../config');
 const { refreshCookieOptions } = require('../settings/cookieOptions');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
+const logger = require('../settings/logger');
 
 const authController = {
   // 회원가입 컨트롤러
@@ -89,19 +90,11 @@ const authController = {
           ),
         );
       }
-      // const token = req.headers.authorization.split(' ')[1];
-
-      // // 해당 token이 정상적인 token인지 확인
-      // const secretKey = config.jwtSecret || 'secretkey';
-      // const jwtDecoded = jwt.verify(token, secretKey);
-
-      // // 토큰에서 ID 추출
-      // const { id } = jwtDecoded;
       const userProfile = await authService.getProfile(id);
 
       res.status(200).json(utils.buildResponse(userProfile));
     } catch (error) {
-      console.error('컨트롤러 에러', error.message);
+      logger.error('Error while get user profile:', error.message);
       next(error);
     }
   },
@@ -183,7 +176,7 @@ const authController = {
         res.status(400).json({ success: false, message: result.message });
       }
     } catch (error) {
-      console.error('Error uploading profile image:', error.message);
+      logger.error('Error uploading profile image:', error.message);
       next(error);
     }
   },
@@ -195,7 +188,7 @@ const authController = {
 
       res.status(200).json(utils.buildResponse(result));
     } catch (error) {
-      console.error('Error While Updating Access Token:', error.message);
+      logger.error('Error while updating access token:', error.message);
       next(error);
     }
   },

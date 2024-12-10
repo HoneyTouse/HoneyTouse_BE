@@ -5,8 +5,8 @@ const checkAuthentication = require('../middleware/loginMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
 const { googleCookieOptions, refreshCookieOptions } = require('../settings/cookieOptions');
-
 const authRouter = express.Router();
+const logger = require('../settings/logger');
 
 // POST /api/v1/auth/sign-up
 // 회원가입
@@ -41,11 +41,11 @@ authRouter.get(
 
         res.redirect(`${ClientUrl}`);
       } catch (error) {
-        console.error('Error generating token:', error);
+        logger.error('Error generating token after google callback:', error);
         res.status(500).send('Internal Server Error');
       }
     } else {
-      console.log('No req.user!');
+      logger.warn('No req.user!');
       res.status(401).send('Unauthorized');
     }
   },
