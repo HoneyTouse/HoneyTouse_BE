@@ -1,4 +1,4 @@
-require('./settings/setConsoleCodePage');
+if (process.env.NODE_ENV !== 'production') require('./settings/setConsoleCodePage');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
