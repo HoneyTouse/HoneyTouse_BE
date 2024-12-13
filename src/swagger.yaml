@@ -82,7 +82,7 @@ paths:
           description: '인증 실패'
 
   /auth/google:
-    post:
+    get:
       tags:
         - 'auth'
       summary: '구글 로그인 요청'
