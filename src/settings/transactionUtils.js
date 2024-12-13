@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('./logger');
 
 // 트랜잭션 관리를 위한 유틸리티 함수 정의
 async function withTransaction(fn) {
