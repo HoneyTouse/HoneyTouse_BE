@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
     "start:dev": "cross-env node_env=development nodemon --watch 'bin/*' --watch 'src/*' bin/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint bin src",
     "format": "prettier --write .",
     "pm2:production": "pm2 start bin/index.js"
@@ -39,7 +39,10 @@
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "ffi-napi": "^4.0.3",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.2",
     "nodemon": "^3.0.3",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "supertest": "^7.0.0"
   }
 }

@@ -39,3 +39,6 @@ dist-ssr
 
 # .env.sample 파일은 Git에서 추적
 !.env.sample
+
+# Jest coverage folder
+coverage/
