@@ -25,6 +25,7 @@ class OrderDAO {
       .lean();
     return orders;
   }
+
   async getOrdersByStatus(status) {
     // 주어진 상태(status)에 해당하는 주문 목록 조회
     const orders = await Order.find({ status: status })
@@ -54,6 +55,11 @@ class OrderDAO {
   async deleteOne(id) {
     const deletedOrder = await Order.findByIdAndDelete(id).lean();
     return deletedOrder;
+  }
+
+  async deleteMany(filter) {
+    const deletedOrders = await Order.deleteMany(filter);
+    return deletedOrders;
   }
 }
 

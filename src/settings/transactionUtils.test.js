@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const User = require('../data-access/model');
 const withTransaction = require('./transactionUtils');
+const logger = require('../settings/logger');
 
 // User 모델 모킹
 jest.mock('../data-access/model', () => {
@@ -22,11 +23,7 @@ let mongoServer;
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
-
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(mongoUri);
 });
 
 // 테스트 후 MongoDB 연결 종료
@@ -43,9 +40,16 @@ beforeEach(async () => {
   User.deleteMany.mockClear();
 });
 
+afterEach(() => {
+  const loggerInfoSpy = jest.spyOn(logger, 'info');
+  expect(loggerInfoSpy).toHaveBeenCalledWith('Transaction Ended');
+});
+
 describe('withTransaction', () => {
   it('작업이 성공적으로 완료되면 트랜잭션을 커밋해야 한다', async () => {
-    const result = await withTransaction(async (session) => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+
+    await withTransaction(async (session) => {
       const user = new User({
         name: 'Honey Touse',
         email: 'honeytouse@example.com',
@@ -66,6 +70,8 @@ describe('withTransaction', () => {
   });
 
   it('오류가 발생하면 트랜잭션을 롤백해서 실패한 작업을 초기화한다', async () => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+
     User.findOne.mockResolvedValue(null);
 
     try {
@@ -81,10 +87,13 @@ describe('withTransaction', () => {
     } catch (error) {
       const user = await User.findOne({ name: 'honey bee' });
       expect(user).toBeNull();
-    }
+    } 
   });
 
   it('트랜잭션 중 오류를 올바르게 처리하여 로그로 남긴다', async () => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+    const loggerErrorSpy = jest.spyOn(logger, 'error');
+
     try {
       await withTransaction(async (session) => {
         const user = new User({
@@ -97,6 +106,15 @@ describe('withTransaction', () => {
       });
     } catch (error) {
       expect(error.message).toMatch(/Transaction failed/);
-    }
+    } 
+
+    expect(loggerErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        err: expect.objectContaining({
+          message: expect.stringContaining('Transaction failed'),
+        }),
+      }),
+      'Transaction error occurred during the process',
+    );
   });
 });
