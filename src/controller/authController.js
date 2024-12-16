@@ -2,7 +2,10 @@ const { authService } = require('../service');
 const utils = require('../misc/utils');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const { refreshCookieOptions } = require('../settings/cookieOptions');
+const {
+  refreshCookieOptions,
+  clearCookieOptions,
+} = require('../settings/cookieOptions');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const logger = require('../settings/logger');
@@ -42,6 +45,31 @@ const authController = {
       res.cookie('refreshToken', refreshToken, refreshCookieOptions);
 
       res.status(201).json(utils.buildResponse({ accessToken }));
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // 로그아웃 컨트롤러
+  async postSignOut(req, res, next) {
+    try {
+      const cookies = req.headers.cookie;
+
+      if (cookies) {
+        const cookieObj = cookies.split(';').reduce((acc, cookie) => {
+          const [key, value] = cookie.trim().split('=');
+          acc[key] = value;
+          return acc;
+        }, {});
+
+        if (cookieObj.refreshToken) {
+          res.clearCookie('refreshToken', clearCookieOptions);
+        }
+      }
+
+      res.status(200).json({
+        message: '로그아웃 되었습니다.',
+      });
     } catch (error) {
       next(error);
     }
