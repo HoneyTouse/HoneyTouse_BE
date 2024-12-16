@@ -4,7 +4,10 @@ const { authService } = require('../service');
 const checkAuthentication = require('../middleware/loginMiddleware');
 const passport = require('passport');
 const { ClientUrl } = require('../config');
-const { googleCookieOptions, refreshCookieOptions } = require('../settings/cookieOptions');
+const {
+  googleCookieOptions,
+  refreshCookieOptions,
+} = require('../settings/cookieOptions');
 const authRouter = express.Router();
 const logger = require('../settings/logger');
 
@@ -15,6 +18,10 @@ authRouter.post('/sign-up', authController.postSignUp);
 // POST /api/v1/auth/sign-in
 // 로그인
 authRouter.post('/sign-in', authController.postSignIn);
+
+// POST /api/v1/auth/sign-out
+// 로그아웃
+authRouter.post('/sign-out', authController.postSignOut);
 
 // 구글 로그인 요청
 // GET /api/v1/auth/google
@@ -61,11 +68,7 @@ authRouter.patch(
 
 // GET /api/v1/auth/me
 // 개인정보 조회
-authRouter.get(
-  '/me',
-  checkAuthentication(),
-  authController.getProfile,
-);
+authRouter.get('/me', checkAuthentication(), authController.getProfile);
 
 // POST /api/v1/auth/withdraw
 // 개인정보 삭제 (탈퇴)
@@ -107,7 +110,7 @@ authRouter.post(
 authRouter.post(
   '/refresh-access-token',
   checkAuthentication(),
-  authController.postRefreshAccessToken
-)
+  authController.postRefreshAccessToken,
+);
 
 module.exports = authRouter;
