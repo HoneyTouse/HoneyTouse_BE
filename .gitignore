@@ -42,3 +42,6 @@ dist-ssr
 
 # Jest coverage folder
 coverage/
+*report
+*coverage
+clover.xml
