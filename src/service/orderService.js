@@ -15,21 +15,15 @@ class OrderService {
         400,
       );
     }
-
-    return withTransaction(async (session) => {
-      const newOrder = await orderDAO.create(
-        {
-          status,
-          customerId,
-          product,
-          memo,
-          payment,
-        },
-        { session },
-      );
-
-      return newOrder;
+    const newOrder = await orderDAO.create({
+      status,
+      customerId,
+      product,
+      memo,
+      payment,
     });
+
+    return newOrder;
   }
 
   // 주문 1개 조회

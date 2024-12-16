@@ -41,20 +41,18 @@ class ProductService {
 
   // 상품 삭제
   async deleteProduct(id) {
-    return withTransaction(async (session) => {
-      const product = await productDAO.findById(id).session(session);
-      if (!product) {
-        throw new AppError(
-          commonErrors.resourceNotFoundError,
-          'Product not found',
-          404,
-        );
-      }
-      await optionDAO.deleteById(product.options).session(session);
-      const deletedProduct = await productDAO.deleteById(id).session(session);
+    const product = await productDAO.findById(id);
+    if (!product) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        'Product not found',
+        404,
+      );
+    }
+    await optionDAO.deleteById(product.options);
+    const deletedProduct = await productDAO.deleteById(id);
 
-      return deletedProduct;
-    });
+    return deletedProduct;
   }
 
   // 모든 상품 조회
