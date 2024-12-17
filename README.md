@@ -6,8 +6,9 @@
 > 저희 꿀단집에서 만나보세요.” 🍯🏠
 
 > 📌 <b>HoneyTouse URL</b> : https://www.honeytouse.com/<br>
-> 📌 <b>HoneyTouse ReadMe</b> : https://github.com/HoneyTouse<br>
-> 📌 <b>HoneyTouse BackEnd Github</b> : https://github.com/HoneyTouse/HoneyTouse_BE
+> 📌 <b>HoneyTouse ReadMe</b> : https://github.com/HoneyTouse <br>
+> 📌 <b>HoneyTouse BackEnd Github</b> : https://github.com/HoneyTouse/HoneyTouse_BE <br>
+> 📌 <b>HoneyTouse Swagger UI</b> : https://api.honeytouse.com/api-docs/
 
 ![리드미최상단](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/6374c883-fad2-40ad-bec2-01fcf71cac01)
 
@@ -15,17 +16,21 @@
 
 ## 바로가기
 
-#### 1. [프로젝트 개요](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#1-프로젝트-개요-1)
-#### 2. [프로젝트 실행 가이드](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#2-프로젝트-실행-가이드-1)
-#### 3. [프로젝트 아키텍쳐](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#3-프로젝트-아키텍쳐-1)
-#### 4. [구현 내용](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#4-구현-내용-1)
-#### 5. [이슈 해결](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#5-이슈-해결-1)
-#### 6. [배포](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#6-배포-1)
-#### 7. [느낀점](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#7-느낀점-1)
+### 1. [프로젝트 개요](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#1-프로젝트-개요-1)
+### 2. [프로젝트 실행 가이드](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#2-프로젝트-실행-가이드-1)
+### 3. [프로젝트 아키텍쳐](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#3-프로젝트-아키텍쳐-1)
+### 4. [구현 내용](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#4-구현-내용-1)
+### 5. [이슈 해결](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#5-이슈-해결-1)
+### 6. [배포](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#6-배포-1)
+### 7. [느낀점](https://github.com/HoneyTouse/HoneyTouse_BE?tab=readme-ov-file#7-느낀점-1)
 
 ---
 
 # 1. 프로젝트 개요
+
+> - <b>[기간 및 방식](#기간-및-방식)</b>
+> - <b>[인원 및 역할](#인원-및-역할)</b>
+> - <b>[기술스택](#기술스택)</b>
 
 - ### 기간 및 방식 <br>
 
@@ -47,29 +52,29 @@
 - ### 인원 및 역할 <br>
 
   - 백엔드 3명<br>
+    - 공통 : POSTMAN 및 Thunder Client로 API 테스트 후, 노션으로 문서화
 
   | 이름   | 역할                                                                                                         |
   | ------ | ------------------------------------------------------------------------------------------------------------ |
   | [문채영](https://github.com/yoocho) | • Admin <i>(관리자 기능)</i> API 작성<br>• Order <i>(회원/비회원 주문 CRUD)</i> API 작성                     |
-  | [이가린](https://github.com/devellybutton) | • User <i>(인증/인가, multer 이미지 처리, 개인정보 CRUD)</i> API 작성<br> • 클라이언트 및 서버 자동 배포<br> |
+  | [이가린](https://github.com/devellybutton) | • User <i>(인증/인가, multer 이미지 처리, 개인정보 CRUD, 트랜잭션 모듈 작성)</i> API 작성<br> • AWS 활용하여 클라이언트 및 서버 자동 배포<br> |
   | [최정민](https://github.com/ioimmini) | • Category <i>(카테고리 CRUD)</i> 작성<br>• Product <i>(상품 CRUD)</i> API 작성<br>                          |
 
-  - 공통 : POSTMAN 및 Thunder Client로 API 테스트 후, 노션으로 문서화
     <br>
 
 - ### 기술스택 <br>
 
-  - <b>백엔드</b> : Node.js, Express, MongoDB, JavaScript
-  - <b>배포</b> : AWS S3, Route53, Cloudfront, EC2, Github actions appleboy/ssh-action
+  - <b>백엔드</b> : Node.js, Express, MongoDB, Mongoose, JavaScript
+  - <b>배포</b> : AWS S3, Route53, Cloudfront, EC2, PM2, Github actions appleboy/ssh-action
 
-| 기술           | 선정 이유                                                                                                                                                                                                                                      |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <b>Express</b> | • 가볍고 유연하여 빠르고 확장 가능한 웹 애플리케이션을 구축하는 데 도움이 되는 <b>`Node.js 라이브러리`</b>임.<br> • 라우팅 및 오류 처리와 같은 <b>`다양한 기능 처리를 단순화`</b>하였기 때문에 <b>`코드 작성이 용이`</b>해 질 것이라고 예상되어 채택함. |
-| <b>MongoDB</b> | • <b>`빠른 조회 성능`</b>: NoSQL은 읽기 연산에 최적화되어 RDB보다 더 빠른 검색 속도를 제공함.<br> • <b>`동적 스키마와 유연한 데이터 구조`</b>: 제품, 주문, 사용자 정보를 중첩된 문서 형태로 저장하여 데이터 구조 변경이 잦은 쇼핑몰에 적합함.<br> • <b>`TTL 기능`</b>: 자동 데이터 만료를 지원하여 회원 가입 시 이메일 인증 등 다양한 용도로 활용할 수 있음.                                                       |
-| <b>JSON Web Token (JWT)</b>     | • <b>`상태 비저장 인증`</b>:  인증을 처리하는 서버의 부하를 줄이고, 빠르고 확장 가능한 인증 프로세스를 제공함. <br> • 이는 서버가 클라이언트의 상태나 세션 정보를 저장하지 않기 때문임.                                                                                                                                                              |
-| <b>Multer</b>     | • <b>`파일 처리 간소화`</b>: HTTP 요청에서 파일 데이터를 손쉽게 추출하고 관리할 수 있어 이미지 처리와 파일 업로드가 간편함.                                              |
-| <b>AWS</b>     | • <b>`광범위한 서비스와 대량 트래픽 처리`</b>: 웹 애플리케이션 호스팅과 배포를 위한 폭넓은 서비스를 제공하며, 대량의 트래픽을 효과적으로 처리함.                                                           |
-| <b>Github Action</b>     | • 스크립트를 작성하여 push할 경우 최신 변경 사항으로 유지됨.<br>• GitHub의 CI/CD 기능을 활용하고 <b>`리포지토리와 원활하게 통합`</b>할 수 있어서 편의성을 높임.                                                              |
+    | 기술           | 선정 이유                                                                                                                                                                                                                                      |
+    | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | <b>Express</b> | • 가볍고 유연하여 빠르고 확장 가능한 웹 애플리케이션을 구축하는 데 도움이 되는 <b>`Node.js 라이브러리`</b>임.<br> • 라우팅 및 오류 처리와 같은 <b>`다양한 기능 처리를 단순화`</b>하였기 때문에 <b>`코드 작성이 용이`</b>해 질 것이라고 예상되어 채택함. |
+    | <b>MongoDB</b> | • <b>`빠른 조회 성능`</b>: NoSQL은 읽기 연산에 최적화되어 RDB보다 더 빠른 검색 속도를 제공함.<br> • <b>`동적 스키마와 유연한 데이터 구조`</b>: 제품, 주문, 사용자 정보를 중첩된 문서 형태로 저장하여 데이터 구조 변경이 잦은 쇼핑몰에 적합함.<br> • <b>`TTL 기능`</b>: 자동 데이터 만료를 지원하여 회원 가입 시 이메일 인증 등 다양한 용도로 활용할 수 있음.                                                       |
+    | <b>JSON Web Token (JWT)</b>     | • <b>`상태 비저장 인증`</b>:  인증을 처리하는 서버의 부하를 줄이고, 빠르고 확장 가능한 인증 프로세스를 제공함. <br> • 이는 서버가 클라이언트의 상태나 세션 정보를 저장하지 않기 때문임.                                                                                                                                                              |
+    | <b>Multer</b>     | • <b>`파일 처리 간소화`</b>: HTTP 요청에서 파일 데이터를 손쉽게 추출하고 관리할 수 있어 이미지 처리와 파일 업로드가 간편함.                                              |
+    | <b>AWS</b>     | • <b>`광범위한 서비스와 대량 트래픽 처리`</b>: 웹 애플리케이션 호스팅과 배포를 위한 폭넓은 서비스를 제공하며, 대량의 트래픽을 효과적으로 처리함.                                                           |
+    | <b>Github Action</b>     | • 스크립트를 작성하여 push할 경우 최신 변경 사항으로 유지됨.<br>• GitHub의 CI/CD 기능을 활용하고 <b>`리포지토리와 원활하게 통합`</b>할 수 있어서 편의성을 높임.                                                              |
 
 - ### 개발환경 <br>
 
@@ -112,6 +117,11 @@ npm run start
 
 # 3. 프로젝트 아키텍쳐
 
+> - <b>[전체 프로젝트 구조](#1-전체-프로젝트-구조)</b>
+> - <b>[MongoDB 스키마](#2-mongodb-스키마)</b>
+> - <b>[로그인 시퀀스 다이어그램](#3-로그인-시퀀스-다이어그램)</b>
+> - <b>[구글 소셜 로그인 시퀀스 다이어그램](#4-구글-소셜-로그인-시퀀스-다이어그램)</b>
+
 ## 1) 전체 프로젝트 구조
 
 ![꿀단집구조(ver 2)](https://github.com/HoneyTouse/.github/assets/127278410/e9218862-d1b5-4452-9f77-f20badc68cd7)
@@ -127,12 +137,13 @@ npm run start
 
 ## 3) 로그인 시퀀스 다이어그램
 
-![로그인시퀀스1(한글)](https://github.com/user-attachments/assets/035d6980-2e07-4616-a3a0-7df5fbe31201)
+![일반로그인시퀀스다이어그램](https://github.com/user-attachments/assets/224eaf44-e2bd-46bb-8e33-f6e02da3dea7)
+
 <details>
-<summary><b>Login Sequence Diagram (English)</b></summary>
+<summary><b>변경 전</b></summary>
 <div markdown="1">
 
-![로그인시퀀스1(영어)](https://github.com/user-attachments/assets/5a044b51-2720-4371-8a96-8d71d6fba786)
+![로그인시퀀스1(한글)](https://github.com/user-attachments/assets/035d6980-2e07-4616-a3a0-7df5fbe31201)
 
 </div>
 </details>
@@ -142,13 +153,13 @@ npm run start
 
 ## 4) 구글 소셜 로그인 시퀀스 다이어그램
 
-![구글시퀀스2](https://github.com/user-attachments/assets/9868de2e-73e8-4136-b50e-bb8f07416d64)
+![구글소셜로그인시퀀스다이어그램](https://github.com/user-attachments/assets/38b20161-d4a5-4633-af17-803d0e6e4387)
 
 <details>
-<summary><b>Google Social Login Sequence Diagram (English)</b></summary>
+<summary><b>변경 전</b></summary>
 <div markdown="1">
 
-![구글시퀀스1](https://github.com/user-attachments/assets/5e687c99-5cf0-43b3-be78-26512985fa4d)
+![구글시퀀스2](https://github.com/user-attachments/assets/9868de2e-73e8-4136-b50e-bb8f07416d64)
 
 </div>
 </details>
@@ -158,26 +169,204 @@ npm run start
 
 # 4. 구현 내용
 
-> - 트랜잭션을 고려한 CRUD 작업
-> - Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현
-> - Logging 라이브러리인 Pino 적용
-> - multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)
-> - passport와 구글 OAuth를 활용한 소셜 로그인
+> - [트랜잭션을 고려한 CRUD 작업](#1-트랜잭션을-고려한-crud-작업)
+> - [Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현](#2-nodemailer-및-ttltime-to-live을-사용하여-이메일-인증을-구현)
+> - [Logging 라이브러리인 Pino 적용](#3-logging-라이브러리인-pino-적용)
+> - [multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)](#4-multer를-활용한-이미지-업로드-처리)
+> - [passport와 구글 OAuth를 활용한 소셜 로그인](#5-passport와-구글-oauth를-활용한-소셜-로그인)
 
 ## 1) 트랜잭션을 고려한 CRUD 작업
 
-- <b>내용</b> : transactionUtils.js 모듈을 별도로 생성하여 서비스 모듈에서 <b>`생성, 수정, 삭제`</b> 메소드에 mongoose 트랜잭션을 적용함.
-- <b>이유</b> : 작업 중 데이터 일관성과 무결성을 보장하기 위함임.
+- <b>내용</b> : transactionUtils.js 모듈을 별도로 생성하여 서비스 모듈에서 <b>`생성, 수정`</b> 메소드에 <b>`mongoose 트랜잭션`</b>을 적용함. 
+- <b>이유</b> : CRUD 작업 중 발생할 수 있는 데이터 일관성과 무결성을 보장하기 위함임.
 - <b>효과</b> : <b>`작업 실패 시 변경 사항을 롤백하여 부분 업데이트를 방지`</b>하고, 데이터베이스 안정성을 유지할 수 있음.
+- <b>테스트</b> : <b>`jest로 해당 트랜잭션 모듈의 기능을 테스트`</b>하여, 트랜잭션 적용 후에도 정상적으로 데이터가 생성되고 수정되며, 실패 시 롤백되는지 검증함. 모든 테스트가 통과되어 안정성을 확인했음.
+
+- [우리 서버에서의 트랜잭션 처리](https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC)
+
 
 <details>
-<summary><i>우리 서버에서의 트랜잭션 처리</i></summary>
+<summary><i> 트랜잭션 모듈 - src/transactionUtils.js
+</i></summary>
 <div markdown="1">
-<b>▼ 트랜잭션의 개념과 우리 서버에서의 트랜잭션 처리</b>
-https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC
+
+```
+const mongoose = require('mongoose');
+const logger = require('./logger');
+
+async function withTransaction(fn) {
+  // 세로운 세션 시작 후 트랜잭션 시작
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    logger.info('Starting transaction...');
+
+    const result = await fn(session);
+
+    // 트랜잭션 커밋
+    await session.commitTransaction();
+    logger.info('Transaction committed successfully');
+    return result;
+  } catch (error) {
+    // 에러 발생 시 트랜잭션 롤백
+    await session.abortTransaction();
+
+    // 새로운 에러 객체 생성 후 로그 출력
+    const enhancedError = new Error(`Transaction failed: ${error.message}`);
+    enhancedError.originalError = error;
+    enhancedError.stack = error.stack;
+
+    logger.error(
+      { err: enhancedError },
+      'Transaction error occurred during the process',
+    );
+
+    // 오류 던지기
+    throw enhancedError;
+  } finally {
+    // 세션 종료
+    session.endSession();
+    logger.info('Transaction Ended');
+  }
+}
+
+module.exports = withTransaction;
+```
 
 </div>
 </details>
+<details>
+<summary><i> 트랜잭션 테스트 모듈 - src/transactionUtils.test.js
+</i></summary>
+<div markdown="1">
+
+```
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const User = require('../data-access/model');
+const withTransaction = require('./transactionUtils');
+const logger = require('../settings/logger');
+
+// User 모델 모킹
+jest.mock('../data-access/model', () => {
+  const mockUser = jest.fn().mockImplementation((data) => ({
+    ...data,
+    save: jest.fn().mockResolvedValue(data),
+  }));
+
+  mockUser.findOne = jest.fn();
+  mockUser.deleteMany = jest.fn();
+
+  return mockUser;
+});
+
+let mongoServer;
+
+// 테스트 전 MongoDB 메모리 시작
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  await mongoose.connect(mongoUri);
+});
+
+// 테스트 후 MongoDB 연결 종료
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});
+
+beforeEach(async () => {
+  // 각 테스트 전 User 모델 초기화
+  User.mockClear();
+  User.findOne.mockClear();
+  User.deleteMany.mockClear();
+});
+
+afterEach(() => {
+  const loggerInfoSpy = jest.spyOn(logger, 'info');
+  expect(loggerInfoSpy).toHaveBeenCalledWith('Transaction Ended');
+});
+
+describe('withTransaction', () => {
+  it('작업이 성공적으로 완료되면 트랜잭션을 커밋해야 한다', async () => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+
+    await withTransaction(async (session) => {
+      const user = new User({
+        name: 'Honey Touse',
+        email: 'honeytouse@example.com',
+      });
+      return await user.save({ session });
+    });
+
+    // 모킹된 findOne 메서드 설정
+    User.findOne.mockResolvedValue({
+      name: 'Honey Touse',
+      email: 'honeytouse@example.com',
+    });
+
+    const user = await User.findOne({ email: 'honeytouse@example.com' });
+    expect(user).not.toBeNull();
+    expect(user.name).toBe('Honey Touse');
+    expect(user.email).toBe('honeytouse@example.com');
+  });
+
+  it('오류가 발생하면 트랜잭션을 롤백해서 실패한 작업을 초기화한다', async () => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+
+    User.findOne.mockResolvedValue(null);
+
+    try {
+      await withTransaction(async (session) => {
+        const user = new User({
+          name: 'honey bee',
+          email: 'honeybee@example.com',
+        });
+        await user.save({ session });
+
+        throw new Error('트랜잭션 진행 중 오류 발생');
+      });
+    } catch (error) {
+      const user = await User.findOne({ name: 'honey bee' });
+      expect(user).toBeNull();
+    } 
+  });
+
+  it('트랜잭션 중 오류를 올바르게 처리하여 로그로 남긴다', async () => {
+    const loggerInfoSpy = jest.spyOn(logger, 'info');
+    const loggerErrorSpy = jest.spyOn(logger, 'error');
+
+    try {
+      await withTransaction(async (session) => {
+        const user = new User({
+          name: 'honey money',
+          email: 'moneyhoney@example.com',
+        });
+        await user.save({ session });
+
+        throw new Error('트랜잭션 진행 중 오류 발생');
+      });
+    } catch (error) {
+      expect(error.message).toMatch(/Transaction failed/);
+    } 
+
+    expect(loggerErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        err: expect.objectContaining({
+          message: expect.stringContaining('Transaction failed'),
+        }),
+      }),
+      'Transaction error occurred during the process',
+    );
+  });
+});
+```
+
+</div>
+</details>
+
 <br>
 
 ## 2) Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현
@@ -283,12 +472,11 @@ module.exports = emailVerificationSchema;
 - <b>내용</b> : pino 라이브러리를 사용하여 로거(logger)를 생성하고, 로그 레벨을 'info'로 설정함.
 - <b>이유</b> : 로그를 'info' 레벨로 설정하여 중요한 정보를 포함한 로그를 캡처하고, 효율적인 디버깅을 위함.
 - <b>효과</b> : <b>`console.log()`</b>는 <b>`동기식`</b>이며 Node.js의 이벤트 루프를 차단할 수 있는 가능성이 있음. 하지만 <b>`pino`</b>는 <b>`비동기`</b>이며, 내부 버퍼링 매커니즘을 사용하여 여러 로그 메시지를 일괄 처리하므로, <b>`이벤트 루프를 차단할 가능성이 줄어듦`</b>.
+- [logging library 활용](https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A%A9)
+- [Windows 환경에서 Pino 로깅 라이브러리를 사용할 때 한글 인코딩 이슈](https://github.com/HoneyTouse/HoneyTouse_BE/issues/19)
 <details>
 <summary><i>pino를 적용한 후 로그 출력</i></summary>
 <div markdown="1">
-<b>▼ logging library 활용</b>
-https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A%A9
-<br>
 
 ![pino설정](https://github.com/HoneyTouse/HoneyTouse_BE/assets/127278410/eed6f796-4c2c-4c6a-9969-c6df85c66df0)
 
@@ -306,24 +494,74 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/logging-library-%ED%99%9C%EC%9A
   - 추가적으로, 서버에 파일을 저장하는 방식은 <b>`서버의 디스크 공간을 많이 차지`</b>할 수 있음.<br>
     → 추후 진행한 프로젝트에서는 presigned URL을 받아서 AWS S3 버킷에 업로드하는 로직을 구현함.
 
+- [Multer을 활용한 우리 서버에서의 이미지 처리](https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B2%98%EB%A6%AC)
+
 <details>
-<summary><i>multer로 프로필 이미지 변경 - service/authService.js</i></summary>
+<summary><i>multer 세팅 - settings/multerConfig.js</i></summary>
 <div markdown="1">
 
-▼ Multer을 활용한 우리 서버에서의 이미지 처리
-https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B2%98%EB%A6%AC
+```
+const multer = require('multer');
+const path = require('path');
+
+class MulterConfig {
+  constructor(uploadDir = './src/public/uploads', fieldName = 'profileImage') {
+    this.uploadDir = uploadDir;
+    this.fieldName = fieldName;
+    this.storage = this.createStorage();
+    // 단일 파일 업로드, 필드 이름은 'profileImage'
+    // 최대 1MB 용량으로 제한
+    this.upload = multer({
+      storage: this.storage,
+      limits: { filesize: 1 * 1024 * 1024 },
+    }).single('profileImage');
+  }
+
+  createStorage() {
+    return multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, this.uploadDir);
+      },
+      filename: (req, file, cb) => {
+        cb(
+          null,
+          file.fieldname + '-' + Date.now() + path.extname(file.originalname),
+        );
+      },
+    });
+  }
+
+  getUploadHandler() {
+    return this.upload;
+  }
+}
+
+module.exports = MulterConfig;
+```
+
+</details>
+<details>
+<summary><i>multer로 회원의 프로필 이미지 변경 - service/authService.js</i></summary>
+<div markdown="1">
 
 ```
-// 프로필 이미지 변경
+  // 프로필 이미지 변경
   async uploadProfileImage(req) {
     return new Promise((resolve, reject) => {
       multerConfig.getUploadHandler()(req, null, async (err) => {
         if (err) {
-          console.error('Error uploading profile image:', err);
-          reject({
-            success: false,
-            message: 'Failed to upload profile image.',
-          });
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            reject({
+              success: false,
+              message: 'File size limit exceeded.',
+            });
+          } else {
+            logger.error('Error uploading profile image:', err);
+            reject({
+              success: false,
+              message: 'Failed to upload profile image.',
+            });
+          }
         } else {
           try {
             const imageUrl = req.file.path;
@@ -340,12 +578,20 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
               throw new AppError(
                 commonErrors.resourceNotFoundError,
                 '해당 이메일로 가입한 회원이 없습니다.',
-                400,
+                404,
               );
             }
 
             // 사용자 정보 업데이트
-            user.profileImage = imageUrl.replace('src\\public\\', '');
+            // 윈도우는 경로 구분자가 '\', 리눅스는 '/'를 사용하여 배포환경에서 이 코드가 동작하지 않았음.
+            // user.profileImage = imageUrl.replace('src\\public\\', '');
+
+            const normalizedPath = path.normalize(imageUrl);
+
+            user.profileImage = normalizedPath.replace(
+              path.join('src', 'public') + path.sep,
+              '',
+            );
 
             const newProfileImage = user.profileImage;
 
@@ -355,7 +601,7 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
 
             resolve({ success: true, imageUrl: newProfileImage });
           } catch (error) {
-            console.error('Error saving profile image URL:', error);
+            logger.error('Error saving profile image URL:', error);
             reject({
               success: false,
               message: 'Failed to save profile image URL.',
@@ -365,7 +611,6 @@ https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Multer%EC%9D%84-%ED%99%9C%EC%9A
       });
     });
   }
-
 ```
 
 </div>
@@ -469,6 +714,10 @@ module.exports = passport;
 ---
 
 # 5. 이슈 해결
+> <b>1. [주문 처리 로직에서 비회원인 경우를 미리 고려하지 않은 POST 요청](#1-주문-처리-로직에서-비회원인-경우를-미리-고려하지-않은-post-요청)</b> <br>
+> <b>2. [안정적인 서버 이미지 로딩 보장](#2-안정적인-서버-이미지-로딩-보장)</b> <br>
+> <b>3. [이미지 업로드 제한 및 압축을 통한 서버 효율성 향상](#3-이미지-업로드-제한-및-압축을-통한-서버-효율성-향상)</b> <br>
+> <b>4. [배포 시 발생한 서버 이미지 경로 처리 문제 해결](#4-배포-시-발생한-서버-이미지-경로-처리-문제-해결)</b>
 
 ## 1) 주문 처리 로직에서 비회원인 경우를 미리 고려하지 않은 POST 요청
 
@@ -483,7 +732,39 @@ module.exports = passport;
 <summary><i>회원과 비회원을 구분하는 주문 내역 처리 - controller/orderController.js</i></summary>
 <div markdown="1">
 
-![이슈해결코드](https://github.com/TripTeller-repository/TripTeller_BE/assets/127278410/89c38b39-4a54-42e8-8718-065591196814)
+```
+const orderController = {
+  // 주문 생성
+  async postOrder(req, res, next) {
+    try {
+      const { status, product, memo, payment } = req.body;
+      let customerId;
+
+      // 토큰에서 유저 ID를 확인하여 customerId 할당
+      if (req.headers.authorization) {
+        customerId = req.userId;
+      } else {
+        // 비회원의 경우 customerId를 랜덤 생성
+        const date = new Date();
+        const timestamp = date.getTime(); // 현재 시간을 밀리초로 가져옴
+        const random = Math.floor(Math.random() * 10000); // 0부터 9999까지의 랜덤한 숫자 생성
+        customerId = `guest_${timestamp}_${random}`; // 예: guest_1646056800000_1234 고유 Id값
+      }
+
+      const order = await orderService.createOrder({
+        status,
+        product,
+        customerId,
+        memo,
+        payment,
+      });
+
+      res.status(201).json(utils.buildResponse(order));
+    } catch (error) {
+      next(error);
+    }
+  },
+```
 
 </div>
 </details>
