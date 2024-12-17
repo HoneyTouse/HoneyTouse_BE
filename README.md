@@ -169,11 +169,11 @@ npm run start
 
 # 4. 구현 내용
 
-> <b>- [트랜잭션을 고려한 CRUD 작업](#1-트랜잭션을-고려한-crud-작업)</b>
-> <b>- [Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현]</b>(#2-nodemailer-및-ttltime-to-live을-사용하여-이메일-인증을-구현)</b>
-> <b>- [Logging 라이브러리인 Pino 적용](#3-logging-라이브러리인-pino-적용)</b>
-> <b>- [multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)](#4-multer를-활용한-이미지-업로드-처리)</b>
-> <b>- [passport와 구글 OAuth를 활용한 소셜 로그인](#5-passport와-구글-oauth를-활용한-소셜-로그인)</b>
+> <b>- [트랜잭션을 고려한 CRUD 작업](#1-트랜잭션을-고려한-crud-작업)</b> <br>
+> <b>- [Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현]</b> <br>(#2-nodemailer-및-ttltime-to-live을-사용하여-이메일-인증을-구현)</b> <br>
+> <b>- [Logging 라이브러리인 Pino 적용](#3-logging-라이브러리인-pino-적용)</b> <br>
+> <b>- [multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)](#4-multer를-활용한-이미지-업로드-처리)</b> <br>
+> <b>- [passport와 구글 OAuth를 활용한 소셜 로그인](#5-passport와-구글-oauth를-활용한-소셜-로그인)</b> <br>
 
 ## 1) 트랜잭션을 고려한 CRUD 작업
 
@@ -367,7 +367,7 @@ describe('withTransaction', () => {
 </div>
 </details>
 <details>
-<summary>트랜잭션 테스트 결과</summary>
+<summary><i>트랜잭션 테스트 결과</i></summary>
 
 ![transactionUtils 테스트 성공](https://github.com/user-attachments/assets/91a52387-b666-4c80-aa08-0cb019134efa)
 
