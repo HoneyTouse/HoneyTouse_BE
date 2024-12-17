@@ -28,9 +28,9 @@
 
 # 1. 프로젝트 개요
 
-> - <b>[기간 및 방식](#기간-및-방식)</b>
-> - <b>[인원 및 역할](#인원-및-역할)</b>
-> - <b>[기술스택](#기술스택)</b>
+> - <b>[기간 및 방식](#기간-및-방식-)</b>
+> - <b>[인원 및 역할](#인원-및-역할-)</b>
+> - <b>[기술스택](#기술스택-)</b>
 
 - ### 기간 및 방식 <br>
 
@@ -169,11 +169,11 @@ npm run start
 
 # 4. 구현 내용
 
-> - [트랜잭션을 고려한 CRUD 작업](#1-트랜잭션을-고려한-crud-작업)
-> - [Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현](#2-nodemailer-및-ttltime-to-live을-사용하여-이메일-인증을-구현)
-> - [Logging 라이브러리인 Pino 적용](#3-logging-라이브러리인-pino-적용)
-> - [multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)](#4-multer를-활용한-이미지-업로드-처리)
-> - [passport와 구글 OAuth를 활용한 소셜 로그인](#5-passport와-구글-oauth를-활용한-소셜-로그인)
+> <b>- [트랜잭션을 고려한 CRUD 작업](#1-트랜잭션을-고려한-crud-작업)</b>
+> <b>- [Nodemailer 및 TTL(Time-To-Live)을 사용하여 이메일 인증을 구현]</b>(#2-nodemailer-및-ttltime-to-live을-사용하여-이메일-인증을-구현)</b>
+> <b>- [Logging 라이브러리인 Pino 적용](#3-logging-라이브러리인-pino-적용)</b>
+> <b>- [multer를 활용한 이미지 업로드 처리 (70% 압축, 1MB 제한)](#4-multer를-활용한-이미지-업로드-처리)</b>
+> <b>- [passport와 구글 OAuth를 활용한 소셜 로그인](#5-passport와-구글-oauth를-활용한-소셜-로그인)</b>
 
 ## 1) 트랜잭션을 고려한 CRUD 작업
 
@@ -182,7 +182,7 @@ npm run start
 - <b>효과</b> : <b>`작업 실패 시 변경 사항을 롤백하여 부분 업데이트를 방지`</b>하고, 데이터베이스 안정성을 유지할 수 있음.
 - <b>테스트</b> : <b>`jest로 해당 트랜잭션 모듈의 기능을 테스트`</b>하여, 트랜잭션 적용 후에도 정상적으로 데이터가 생성되고 수정되며, 실패 시 롤백되는지 검증함. 모든 테스트가 통과되어 안정성을 확인했음.
 
-- [우리 서버에서의 트랜잭션 처리](https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC)
+- [우리 서버에서의 트랜잭션 처리](https://github.com/HoneyTouse/HoneyTouse_BE/wiki/Mongoose%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EA%B3%BC-%EC%9A%B0%EB%A6%AC-%EC%84%9C%EB%B2%84%EC%97%90%EC%84%9C%EC%9D%98-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EC%B2%98%EB%A6%AC)
 
 
 <details>
@@ -365,6 +365,12 @@ describe('withTransaction', () => {
 ```
 
 </div>
+</details>
+<details>
+<summary>트랜잭션 테스트 결과</summary>
+
+![transactionUtils 테스트 성공](https://github.com/user-attachments/assets/91a52387-b666-4c80-aa08-0cb019134efa)
+
 </details>
 
 <br>
