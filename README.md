@@ -1,6 +1,6 @@
 # 🐝꿀단집 BackEnd Repository
 
-> 📌 <b><a href="https://www.honeytouse.com/">배포 링크</a></b><br> 📌 <b><a href="https://github.com/HoneyTouse">서비스 소개</a></b><br> 📌 <b><a href="https://api.honeytouse.com/api-docs/">스웨거</a></b><br> 
+> 📌 <b><a href="https://www.honeytouse.com/">배포 링크</a></b> (AWS Free tier 만료 → 25년 3월부터 중지)<br> 📌 <b><a href="https://github.com/HoneyTouse">서비스 소개</a></b><br> 📌 <b><a href="https://api.honeytouse.com/api-docs/">스웨거</a></b><br> 
 📌 <b><a href="https://github.com/HoneyTouse/HoneyTouse_BE/wiki/%EA%BF%80%EB%8B%A8%EC%A7%91-MongoDB-%EC%8A%A4%ED%82%A4%EB%A7%88">MongoDB 스키마</a></b>
 
 ---
